@@ -1,50 +1,39 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-<title>کهکشان</title>
+<title>کتابخانه من</title>
 {% endblock %}
 
 {% block content %}
-        <!-- slider-area -->
-        <section class="slider__area slider__bg" data-background="{{ url_for('static', filename='img/slider/slider_bg.jpg') }}">
-            <div class="slider-activee">
-                <div class="single-slider">
-                    <div class="container custom-container">
-                        <div class="row justify-content-between">
-                            <div class="col-lg-6">
-                                <div class="slider__content">
-                                    <h6 class="sub-title wow fadeInUp" data-wow-delay=".2s">بازی آنلاین</h6>
-                                    <h2 class="title wow fadeInUp" data-wow-delay=".5s">اســتریــم</h2>
-                                    <p class="wow fadeInUp" data-wow-delay=".8s">بازی های ویدیویی آنلاین</p>
-                                    <div class="slider__btn wow fadeInUp" data-wow-delay="1.2s">
-                                        <a href="contact.html" class="tg-btn-1"><span>تماس با ما</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xxl-6 col-xl-5 col-lg-6">
-                                <div class="slider__img text-center">
-                                    <img src="{{ url_for('static', filename='img/slider/slider_img01.png') }}" data-magnetic alt="img">
-                                </div>
-                            </div>
+    <!-- Hero Start -->
+    <section class="bg-half-170 pb-lg-0 pb-md-4 d-table w-100 bg-apps">
+        <div class="bg-overlay bg-gradient-primary opacity-9"></div>
+        <div class="container">
+            <div class="row position-relative" style="z-index: 1;">
+                <div class="col-md-7 col-12 mt-lg-5">
+                    <div class="title-heading">
+                        <h1 class="heading text-white title-dark mb-4">برنامه ضروری موبایل <br/> برای فضاهای کاری</h1>
+                        <p class="para-desc text-white-50">کاوش کنید و درباره همه چیز، از یادگیری ماشینی و پرداخت‌های جهانی گرفته تا مقیاس‌بندی تیم خود، اطلاعات بیشتری کسب کنید.</p>
+                        <div class="mt-4 pt-2">
+                            <a class="btn btn-primary" href="javascript:void(0)">شروع آزمایشی رایگان</a>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="slider__shapes">
-                <img src="{{ url_for('static', filename='img/slider/slider_shape01.png') }}" alt="shape">
-                <img src="{{ url_for('static', filename='img/slider/slider_shape02.png') }}" alt="shape">
-                <img src="{{ url_for('static', filename='img/slider/slider_shape03.png') }}" alt="shape">
-                <img src="{{ url_for('static', filename='img/slider/slider_shape04.png') }}" alt="shape">
-            </div>
-            <div class="slider__brand-wrap">
-                <div class="container custom-container">
-                    <ul class="slider__brand-list list-wrap">
-                        <li><a href="#"><img src="{{ url_for('static', filename='img/brand/brand_logo01.png') }}" alt="brand"></a></li>
-                        <li><a href="#"><img src="{{ url_for('static', filename='img/brand/brand_logo02.png') }}" alt="brand"></a></li>
-                        <li><a href="#"><img src="{{ url_for('static', filename='img/brand/brand_logo03.png') }}" alt="brand"></a></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-        <!-- slider-area-end -->
+                </div><!--end col-->
+
+                <div class="col-md-5 col-12 mt-4 pt-2 mt-sm-0 pt-sm-0">
+                    <div class="shape-before">
+                        <div class="carousel-cell"><img alt="" class="img-fluid" src="{{ url_for('static', filename='images/app/hero.png') }}"/></div>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+        </div><!--end container-->
+    </section><!--end section-->
+    <div class="position-relative">
+        <div class="shape overflow-hidden text-white">
+            <svg fill="none" viewBox="0 0 2880 250" xmlns="http://www.w3.org/2000/svg">
+                <path d="M720 125L2160 0H2880V250H0V125H720Z" fill="currentColor"></path>
+            </svg>
+        </div>
+    </div>
+    <!-- Hero End -->
 {% endblock %}
