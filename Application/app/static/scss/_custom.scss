@@ -1,0 +1,194 @@
+$font-rtl: 'vazir';
+
+.tns-inner {
+    direction: ltr;
+
+    .tiny-slide {
+        direction: rtl;
+    }
+}
+
+#pills-tabContent {
+    #pills-npm {
+        >p {
+            direction: ltr;
+        }
+    }
+}
+
+.swiper-slider-hero {
+    .swiper-container {
+        .swiper-button-next {
+            right: 10px;
+            left: unset;
+        }
+
+        .swiper-button-prev {
+            left: 10px;
+            right: unset;
+        }
+    }
+}
+
+
+.home-slider {
+    .carousel-control-next {
+        right: 0;
+        left: unset;
+    }
+
+    .carousel-control-prev {
+        right: unset;
+        left: 0;
+    }
+}
+
+.tns-visually-hidden {
+    right: -10000em;
+    left: unset;
+}
+
+
+//Breadcrumb
+.breadcrumb {
+    .breadcrumb-item {
+        &:after {
+            content: "\F0141" !important;
+        }
+    }
+}
+
+
+code {
+    direction: ltr;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#topnav {
+    .navigation-menu {
+        >li {
+            >a {
+                letter-spacing: 0;
+            }
+        }
+    }
+}
+
+.container-filter {
+    li {
+        letter-spacing: 0;
+    }
+}
+
+.sidebar {
+    .widget {
+        .tagcloud {
+            >a {
+                letter-spacing: 0;
+            }
+        }
+    }
+}
+
+.footer {
+    .footer-head {
+        letter-spacing: 0;
+    }
+}
+
+.text-shadow-dark-lg {
+    letter-spacing: 0;
+}
+
+.bg-light {
+    color: $dark  !important;
+}
+
+
+
+// rtl-font
+.cafe-css {
+    body {
+        font-family: $font-rtl  !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6 {
+        font-family: $font-rtl  !important;
+    }
+
+    #topnav {
+        font-family: $font-rtl  !important;
+        font-size: 11px !important;
+    }
+
+    .title-heading {
+        font-family: $font-rtl  !important;
+    }
+}
+
+
+#topnav {
+    font-family: $font-rtl  !important;
+}
+
+.restaurant-css {
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6,
+    #topnav {
+        font-family: $font-rtl  !important;
+    }
+}
+
+body {
+    &.gym-scss {
+
+        font-family: $font-rtl  !important;
+    }
+}
+
+.gym-scss {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6 {
+        font-family: $font-rtl  !important;
+    }
+
+    #topnav .navigation-menu>li>a {
+        font-family: $font-rtl  !important;
+    }
+}
+

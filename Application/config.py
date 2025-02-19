@@ -1,2 +1,1 @@
 # Learniverse
-Learning Universe
