@@ -29,14 +29,14 @@ class Users:
         # Create users table
         sql = """CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY,
-        username TEXT NOT NULL UNIQUE,
+        phone TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         fname TEXT NOT NULL,
         lname TEXT NOT NULL,
-        grade INTEGER NOT NULL DEFAULT 7,
         register_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_login DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         is_active BOOLEAN DEFAULT 1,
+        is_staff BOOLEAN DEFAULT 0,
         is_admin BOOLEAN DEFAULT 0
         )"""
         cursor.execute(sql)
@@ -45,29 +45,27 @@ class Users:
 
     def add_user(
             self,
-            username: str,
+            phone: str,
             password: str,
             fname: str,
             lname: str,
-            grade: int = 7,
             register_date=None,
             last_login=None,
             is_active: bool = True,
+            is_staff: bool = False,
             is_admin: bool = False
     ) -> bool:
         """
         Inserts a new user into the database.
 
-        :param username: The username of the user
-        :type username: str
+        :param phone: The phone of the user
+        :type phone: str
         :param password: User's password
         :type password: str
         :param fname: The first name of the user
         :type fname: str
         :param lname: The last name of the user
         :type lname: str
-        :param grade: The grade of the user. defaults to 7
-        :type grade: int (optional)
         :param register_date: The date and time when the user
         is registered (optional)
         :param last_login: The date and time of the
@@ -87,19 +85,19 @@ class Users:
             last_login = datetime.now()
 
         sql = """INSERT OR IGNORE INTO users (
-        username, password, fname, lname, grade, register_date,
-        last_login, is_active, is_admin)
+        phone, password, fname, lname, register_date,
+        last_login, is_active, is_staff, is_admin)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
         param = (
-            username,
+            phone,
             password,
             fname,
             lname,
-            grade,
             register_date,
             last_login,
             is_active,
+            is_staff,
             is_admin
         )
         try:
@@ -117,7 +115,7 @@ class Users:
     def update_user_info(
             self,
             id: int,
-            username: str,
+            phone: str,
             fname: str,
             lname: str,
             grade: int,
@@ -127,8 +125,8 @@ class Users:
 
         :param id: The ID of the user to update
         :type id: int
-        :param username: New username for the user
-        :type username: str
+        :param phone: New phone for the user
+        :type phone: str
         :param fname: New first name for the user
         :type fname: str
         :param lname: New last name for the user
@@ -139,10 +137,10 @@ class Users:
         the status of updating the new user's info.
         """
         sql = """UPDATE users SET
-        username = ?, fname = ?,lname = ?, grade = ?
+        phone = ?, fname = ?,lname = ?, grade = ?
         WHERE id = ?
         """
-        params = (username, fname, lname, grade, id)
+        params = (phone, fname, lname, grade, id)
         try:
             self.conn = sqlite3.connect(self.__db)
             cursor = self.conn.cursor()
@@ -201,66 +199,19 @@ class Users:
             print(e)
             return False
 
-    def update_user_tries(self, tries, id) -> bool:
-        """
-        Update a user tries.
-
-        :param id: The ID of the user to update
-        :type id: int
-        :param tries: The number of tries
-        :type tries: int
-        :return: a boolean that indicate success.
-        """
-        sql = "UPDATE users SET tries = ? WHERE id = ?"
-        params = (tries, id)
-        try:
-            self.conn = sqlite3.connect(self.__db)
-            cursor = self.conn.cursor()
-            cursor.execute(sql, params)
-            self.conn.commit()
-            self.conn.close()
-            return True
-        except Exception as e:
-            print(e)
-            return False
-
-    def update_user_trees(self, trees: int, id: int):
-        """
-        Update a user trees in the database based on user ID.
-
-        :param trees: The number of trees
-        :type trees: int
-        :param id: The ID of the user to update
-        :type id: int
-        :return: a boolean that includes
-        the status of updating the user's trees.
-        """
-        sql = "UPDATE users SET trees = ? WHERE id = ?"
-        params = (trees, id)
-        try:
-            self.conn = sqlite3.connect(self.__db)
-            cursor = self.conn.cursor()
-            cursor.execute(sql, params)
-            self.conn.commit()
-            self.conn.close()
-            return True
-        except Exception as e:
-            print(e)
-            return False
-
-    def get_user_id(self, username: str) -> int:
+    def get_user_id(self, phone: str) -> int:
         """
         Get a user's id from db.
 
-        :param username: The username of the user
-        :type username: str
+        :param phone: The phone of the user
+        :type phone: str
         :return: an integer that includes user's id.
         """
-        sql = "SELECT id FROM users WHERE username = ?"
+        sql = "SELECT id FROM users WHERE phone = ?"
         try:
             self.conn = sqlite3.connect(self.__db)
             cursor = self.conn.cursor()
-            cursor.execute(sql, (username,))
+            cursor.execute(sql, (phone,))
             row = cursor.fetchone()
             id = 0
             if row:

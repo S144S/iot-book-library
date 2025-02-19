@@ -11,19 +11,18 @@ def register():
     if request.method == "POST":
         fname = request.form["fname"]
         lname = request.form["lname"]
-        grade = request.form["grade"]
-        username = request.form["username"]
+        phone = request.form["phone"]
         password = request.form["password"]
-        if not fname or not lname or not grade or not username or not password:
-            flash("پر کردن تمام فیلدها اجباری هست!", "danger")
+        if not fname or not lname or not phone or not password:
+            flash("پر کردن تمام فیلدها اجباری می باشد!!", "danger")
             return redirect(url_for('register'))
-        re_password = request.form["reppass"]
+        re_password = request.form["confirm_password"]
         if password != re_password:
             flash("گذرواژه و تکرار گذرواژه یکسان نیست!", "danger")
             return redirect(url_for('register'))
         # Hash password
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        done = db.users.add_user(username, hashed_password, fname, lname, int(grade))
+        done = db.users.add_user(phone, hashed_password, fname, lname)
         if done:
             flash("ثبت‌نام با موفقیت انجام شد!", "success")
             return redirect(url_for('login'))
@@ -41,9 +40,9 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     if request.method == "POST":
-        username = request.form["username"]
+        phone = request.form["phone"]
         password = request.form["password"]
-        uid = db.users.get_user_id(username)
+        uid = db.users.get_user_id(phone)
         if uid == 0:
             flash(' مطمئن هستی قبلا ثبت نام کردی؟!', 'warning')
             return redirect(url_for('login'))
