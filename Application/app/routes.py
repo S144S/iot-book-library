@@ -67,10 +67,9 @@ def home():
     user_info = db.users.get_user(current_user.id)
     return render_template('index.html', user_info=user_info)
 
-# @app.route('/mission')
-# def mission():
-#     return render_template('mission.html')
+@app.route('/contact')
+@login_required
+def contact():
+    user_info = db.users.get_user(current_user.id)
+    return render_template('contact.html', user_info=user_info)
 
-# @app.route('/planet')
-# def planet():
-#     return render_template('planet.html')

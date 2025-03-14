@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>کتابخانه من</title>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Start -->
+    <section class="bg-half-170 d-table w-100" style="background: url('static/images/bg/about.jpg') center;">
+        <div class="bg-overlay bg-gradient-overlay"></div>
+        <div class="container">
+            <div class="row mt-5 justify-content-center">
+                <div class="col-12">
+                    <div class="title-heading text-center">
+                        <small class="text-white-50 mb-1 fw-medium text-uppercase mx-auto">در تماس باشید</small>
+                        <h5 class="heading fw-semibold mb-0 page-heading text-white title-dark"> تماس با ما </h5>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+
+            <div class="position-middle-bottom">
+                <nav aria-label="breadcrumb" class="d-block">
+                    <ul class="breadcrumb breadcrumb-muted mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('home') }}"> خانه </a></li>
+                        <li aria-current="page" class="breadcrumb-item active"> تماس با ما </li>
+                    </ul>
+                </nav>
+            </div>
+        </div><!--end container-->
+    </section><!--end section-->
+    <!-- Hero End -->
+
+    <!-- Start -->
+    <section class="section pb-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card border-0 text-center features feature-clean bg-transparent">
+                        <div class="icons text-primary text-center mx-auto">
+                            <i class="uil uil-phone d-block rounded h3 mb-0"></i>
+                        </div>
+                        <div class="content mt-3">
+                            <h5 class="footer-head">تلفن</h5>
+                            <p class="text-muted">همیشه در دسترس هستیم!</p>
+                            <a class="text-foot" href="tel:05135035035">05135035035</a>
+                        </div>
+                    </div>
+                </div><!--end col-->
+                
+                <div class="col-md-4 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                    <div class="card border-0 text-center features feature-clean bg-transparent">
+                        <div class="icons text-primary text-center mx-auto">
+                            <i class="uil uil-envelope d-block rounded h3 mb-0"></i>
+                        </div>
+                        <div class="content mt-3">
+                            <h5 class="footer-head">پست الکترونیک</h5>
+                            <p class="text-muted">ارتباط بدون معطلی</p>
+                            <a class="text-foot" href="mailto:support@farzanlib.ir">support@farzanlib.ir</a>
+                        </div>
+                    </div>
+                </div><!--end col-->
+                
+                <div class="col-md-4 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                    <div class="card border-0 text-center features feature-clean bg-transparent">
+                        <div class="icons text-primary text-center mx-auto">
+                            <i class="uil uil-map-marker d-block rounded h3 mb-0"></i>
+                        </div>
+                        <div class="content mt-3">
+                            <h5 class="footer-head">آدرس</h5>
+                            <p class="text-muted">مشهد، بین کوهسنگی 9 و 11، دبیرستان دولتی دخترانه فرزان</p>
+                        </div>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+        </div><!--end container-->
+
+        <div class="container mt-100 mt-60">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="section-title mb-5 pb-2 text-center">
+                        <h4 class="title mb-3">در تماس باشید !</h4>
+                        <p class="text-muted para-desc mx-auto mb-0">با پر کردن فرم تماس، دراسرع وقت پاسختان را می‌دهیم.</p>
+                    </div>
+                    <div class="custom-form">
+                        <form id="myForm" method="post" name="myForm" onsubmit="return validateForm()">
+                            <p class="mb-0" id="error-msg"></p>
+                            <div id="simple-msg"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">اسم شما <span class="text-danger">*</span></label>
+                                            <input class="form-control" id="name" name="name" placeholder="نام :" type="text"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">ایمیل شما <span class="text-danger">*</span></label>
+                                            <input class="form-control" id="email" name="email" placeholder="پست الکترونیک :" type="email"/>
+                                    </div> 
+                                </div><!--end col-->
+
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">موضوع</label>
+                                            <input class="form-control" id="subject" name="subject" placeholder="موضوع :"/>
+                                    </div>
+                                </div><!--end col-->
+
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">نظر <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" id="comments" name="comments" placeholder="پیام:" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary" id="submit" name="send" type="submit">ارسال پیام</button>
+                                    </div>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </form>
+                    </div><!--end custom-form-->
+                </div><!--end col-->
+            </div><!--end row-->
+        </div><!--end container-->
+
+        <div class="container-fluid mt-100 mt-60">
+            <div class="row">
+                <div class="col-12 p-0">
+                    <div class="card map border-0">
+                        <div class="card-body p-0">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d695.8990956310461!2d59.575014991104275!3d36.28718585165496!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f6c917a01624d5d%3A0xca43ffaa4cd6044f!2z2K_YqNuM2LHYs9iq2KfZhiDYr9mI2LHZhyDYp9mI2YQg2YXYqtmI2LPYt9mHINmB2LHYstin2YY!5e0!3m2!1sde!2sde!4v1741622491285!5m2!1sde!2sde" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+        </div><!--end container-->
+    </section><!--end section-->
+    <!-- End -->
+
+    
+{% endblock %}

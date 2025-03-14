@@ -52,7 +52,8 @@
                 <div id="navigation">
                     <!-- Navigation Menu-->
                     <ul class="navigation-menu nav-left nav-light">
-                        <li><a class="sub-menu-item" href="index.html"> صفحه اصلی </a></li>
+                        <li><a class="sub-menu-item" href="{{ url_for('home') }}"> خانه </a></li>
+                        <li><a class="sub-menu-item" href="page-contact.html"> جستجو کتاب </a></li>
                         {% if not user_info.is_staff %}
                         <li><a class="sub-menu-item" href="page-contact.html"> عضویت در کتابخانه </a></li>
                         <li><a class="sub-menu-item" href="page-contact.html"> رزرو میز مطالعه </a></li>
@@ -63,7 +64,8 @@
                         <li><a class="sub-menu-item" href="page-contact.html"> مشاهده لیست اهدا کتاب </a></li>
                         <li><a class="sub-menu-item" href="page-contact.html"> مشاهده لیست نیازمندی ها </a></li>
                         {% endif %}
-                        <li><a class="sub-menu-item" href="page-contact.html"> پشتیبانی </a></li>
+                        <li><a class="sub-menu-item" href="{{ url_for('contact') }}"> پشتیبانی </a></li>
+                        <li><a class="sub-menu-item" href="{{ url_for('logout') }}"> خروج </a></li>
                     </ul><!--end navigation menu-->
                 </div><!--end navigation-->
             </div><!--end container-->
@@ -94,8 +96,8 @@
                                         <div class="col-md-4 col-12 mt-4 mt-lg-0 pt-2 pt-lg-0">
                                             <h6 class="footer-head">با ما همراه باشید</h6>
                                             <ul class="list-unstyled footer-list mt-4">
-                                                <li><a class="text-foot" href="index.html"><i class="uil uil-angle-left-b me-1"></i> ارتباط با ما</a></li>
-                                                <li><a class="text-foot" href="page-contact.html"><i class="uil uil-angle-left-b me-1"></i> تماس با ما </a></li>
+                                                <li><a class="text-foot" href="{{ url_for('contact') }}"><i class="uil uil-angle-left-b me-1"></i> درباره ما</a></li>
+                                                <li><a class="text-foot" href="{{ url_for('contact') }}"><i class="uil uil-angle-left-b me-1"></i> تماس با ما </a></li>
                                                 <li><a class="text-foot" href="https://www.nlai.ir/" target="_blank"><i class="uil uil-angle-left-b me-1"></i> کتابخانه ملی</a></li>
                                                 <li><a class="text-foot" href="https://isti.ir/" target="_blank"><i class="uil uil-angle-left-b me-1"></i> معاونت علمی ریاست جمهوری </a></li>
                                             </ul>
