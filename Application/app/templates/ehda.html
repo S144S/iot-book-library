@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>اهدا کتاب</title>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Start -->
+    <section class="bg-half-170 d-table w-100" style="background: url('static/images/bg/about.jpg') center;">
+        <div class="bg-overlay bg-gradient-overlay"></div>
+        <div class="container">
+            <div class="row mt-5 justify-content-center">
+                <div class="col-12">
+                    <div class="title-heading text-center">
+                        <small class="text-white-50 mb-1 fw-medium text-uppercase mx-auto">آگاهی را گسترش دهید با</small>
+                        <h5 class="heading fw-semibold mb-0 page-heading text-white title-dark"> اهدا کتاب </h5>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+
+            <div class="position-middle-bottom">
+                <nav aria-label="breadcrumb" class="d-block">
+                    <ul class="breadcrumb breadcrumb-muted mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('home') }}"> خانه </a></li>
+                        <li aria-current="page" class="breadcrumb-item active"> اهدا کتاب </li>
+                    </ul>
+                </nav>
+            </div>
+        </div><!--end container-->
+    </section><!--end section-->
+    <!-- Hero End -->
+
+        <!-- Forms Start -->
+    <div class="col pt-2 picture-item">
+        <div class="component-wrapper rounded shadow">
+            <div class="p-4 border-bottom text-center">
+                <h4 class="title mb-0"> فرم اهدای کتاب </h4>
+            </div>
+
+            <div class="p-4">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <form action="{{ url_for('ehda') }}" method="POST" novalidate>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">نام کتاب <span class="text-danger">*</span></label>
+                                <input class="form-control" id="name" name="name" placeholder="نام کتاب" type="text"/>
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">نویسنده <span class="text-danger">*</span></label>
+                                <input class="form-control" id="writer" name="writer" placeholder="نویسنده" type="text"/>
+                            </div> 
+                        </div><!--end col-->
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">ناشر <span class="text-danger">*</span></label>
+                                <input class="form-control" id="publisher" name="publisher" placeholder="ناشر" type="text"/>
+                            </div> 
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">موضوع</label>
+                                <input class="form-control" id="subject" name="subject" placeholder="موضوع کتاب"/>
+                            </div>                                                                               
+                        </div><!--end col-->
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">آدرس<span class="text-danger">*</span></label>
+                                <input class="form-control" id="address" name="address" placeholder="آدرس مراجعه پیک برای تحویل کتاب"/>
+                            </div>                                                                               
+                        </div><!--end col-->
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">توضیحات بیشتر </label>
+                                <textarea class="form-control" id="description" name="description" placeholder="توضیحات" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div><!--end row-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input class="btn btn-primary" id="submit" name="send" type="submit" value="ارسال اهدا نامه"/>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </form><!--end form-->
+            </div>
+        </div>
+    </div><!--end col-->
+    <!-- Forms End -->
+
+    
+{% endblock %}

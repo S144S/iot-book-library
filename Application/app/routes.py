@@ -73,3 +73,22 @@ def contact():
     user_info = db.users.get_user(current_user.id)
     return render_template('contact.html', user_info=user_info)
 
+
+@app.route('/ehda', methods=['GET', 'POST'])
+@login_required
+def ehda():
+    user_info = db.users.get_user(current_user.id)
+    if request.method == "POST":
+        book_name = request.form["name"]
+        author = request.form["writer"]
+        publisher = request.form["publisher"]
+        subject = request.form["subject"]
+        address = request.form["address"]
+        description = request.form["description"]
+        # TODO: Add donated book into the database
+        if not book_name or not author or not publisher or not address:
+            flash('افزودن نام کتاب، نویسنده، ناشر و آدرس الزامی است!!', 'danger')
+        else:
+            flash('فرم اهدا با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
+    return render_template('ehda.html', user_info=user_info)
+
