@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import UserManagement, app, bcrypt, db, login_manager
@@ -108,3 +108,42 @@ def request_book():
         else:
             flash('فرم اهدا با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
     return render_template('book_req.html', user_info=user_info)
+
+
+@app.route('/reserve', methods=['GET', 'POST'])
+@login_required
+def reserve():
+    user_info = db.users.get_user(current_user.id)
+    if request.method == "POST":
+        data = request.get_json()
+        date = data.get('date')
+        time = data.get('time')
+        table_id = data.get('tableId')
+        table_id = int(table_id[5:])
+        # TODO: Update reserved table on the db
+
+        print(f'Reserving table: {table_id} for {date} at {time}')
+        return jsonify({'message': f'میز {table_id} در تاریخ {date} و ساعت {time} رزرو شد.'})
+
+    return render_template('reserve.html', user_info=user_info)
+
+@app.route('/check-table', methods=['POST'])
+@login_required
+def check_table():
+    user_info = db.users.get_user(current_user.id)
+    data = request.get_json()
+    date = data.get('date')
+    time = data.get('time')
+    print(date, time)
+    # TODO: Check table reservation status by hour and date
+    table1 = True
+    table2 = True
+    table3 = True
+    table4 = False
+    return jsonify({
+        'table1': table1,
+        'table2': table2,
+        'table3': table3,
+        'table4': table4
+    })
+

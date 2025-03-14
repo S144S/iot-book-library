@@ -19,3 +19,24 @@
 .rounded-img {
     border-radius: 15px;
 }
+
+.available-table {
+    background-color: green;
+}
+
+.selected-table {
+    background-color: rgb(27, 164, 206);
+}
+
+.reserved {
+    background-color: red;
+}
+
+.pointer-cursor {
+    cursor: pointer !important;
+}
+
+.font-xs {
+    font-size: 0.75rem;
+    line-height: 1.25;
+}

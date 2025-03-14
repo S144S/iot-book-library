@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>رزرو میز مطالعه</title>
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Start -->
+    <section class="bg-half-170 d-table w-100" style="background: url('static/images/bg/about.jpg') center;">
+        <div class="bg-overlay bg-gradient-overlay"></div>
+        <div class="container">
+            <div class="row mt-5 justify-content-center">
+                <div class="col-12">
+                    <div class="title-heading text-center">
+                        <small class="text-white-50 mb-1 fw-medium text-uppercase mx-auto">صرفه جویی در زمان با</small>
+                        <h5 class="heading fw-semibold mb-0 page-heading text-white title-dark"> رزرو میز مطالعه </h5>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+
+            <div class="position-middle-bottom">
+                <nav aria-label="breadcrumb" class="d-block">
+                    <ul class="breadcrumb breadcrumb-muted mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('home') }}"> خانه </a></li>
+                        <li aria-current="page" class="breadcrumb-item active"> رزرو میز مطالعه </li>
+                    </ul>
+                </nav>
+            </div>
+        </div><!--end container-->
+    </section><!--end section-->
+    <!-- Hero End -->
+
+    <div class="container my-5">
+        <div id="reservationForm">
+            <!-- انتخاب تاریخ -->
+            <label for="date">انتخاب تاریخ:</label>
+            <input type="text" id="date" class="form-control mb-3">
+    
+            <!-- انتخاب ساعت -->
+            <label for="time">انتخاب ساعت:</label>
+            <select id="time" class="form-control mb-3">
+                <option>08:00 - 10:00</option>
+                <option>10:00 - 12:00</option>
+                <option>12:00 - 14:00</option>
+                <option>14:00 - 16:00</option>
+                <option>16:00 - 18:00</option>
+                <option>18:00 - 20:00</option>
+            </select>
+            <!-- انتخاب میز -->
+            <h5 class="mt-4">انتخاب میز<span class="font-xs">(روی میز مورد نظر کلیک کنید)</span>:</h5>
+            <div class="d-flex gap-2">
+                <div class="p-3 border available-table text-white pointer-cursor" id="table1">میز 1</div>
+                <div class="p-3 border available-table text-white pointer-cursor" id="table2" >میز 2</div>
+                <div class="p-3 border available-table text-white pointer-cursor" id="table3">میز 3</div>
+                <div class="p-3 border available-table text-white pointer-cursor" id="table4">میز 4</div>
+            </div>
+            <button class="btn btn-primary mt-4 w-100" id="reserve-btn">رزرو کن</button>
+            <div id="reservation-message" class="mt-3 text-danger"></div>
+            <div id="reservation-success-message" class="mt-3 text-success"></div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/persian-date.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/persian-datepicker.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/reserve_table.js') }}"></script>
+{% endblock %}
