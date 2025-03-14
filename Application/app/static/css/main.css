@@ -11,3 +11,11 @@
     background: url('/static/images/bg/about.jpg') no-repeat center;
     background-size: cover;
 }
+
+.bg-counter {
+    background: url('/static/images/bg/app-counter.jpg') no-repeat center;
+}
+
+.rounded-img {
+    border-radius: 15px;
+}

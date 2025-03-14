@@ -28,12 +28,12 @@
         <header class="defaultscroll sticky" id="topnav">
             <div class="container">
                 <!-- Logo container-->
-                <a class="logo" href="index.html">
+                <a class="logo" href="{{ url_for('home') }}">
                     <span class="logo-light-mode">
-                        <img alt="" class="l-dark" src="images/logo-dark.png"/>
-                        <img alt="" class="l-light" src="images/logo-light.png"/>
+                        <img alt="" class="l-dark" src="{{ url_for('static', filename='images/logo-dark.png') }}"/>
+                        <img alt="" class="l-light" src="{{ url_for('static', filename='images/logo-light.png') }}"/>
                     </span>
-                    <img alt="" class="logo-dark-mode" src="images/logo-light.png"/>
+                    <img alt="" class="logo-dark-mode" src="{{ url_for('static', filename='images/logo-light.png') }}"/>
                 </a>
                 <!-- End Logo container-->
                 <div class="menu-extras">
@@ -49,339 +49,21 @@
                         <!-- End mobile menu toggle-->
                     </div>
                 </div>
-
-                <ul class="buy-button list-inline mb-0">
-                    <li class="list-inline-item search-icon mb-0">
-                        <div class="dropdown">
-                            <button aria-expanded="false" aria-haspopup="true" class="btn btn-link text-decoration-none dropdown-toggle mb-0 p-0" data-bs-toggle="dropdown" type="button">
-                                <i class="uil uil-search h5 text-dark nav-light-icon-dark mb-0"></i>
-                                <i class="uil uil-search h5 text-white nav-light-icon-white mb-0"></i>
-                            </button>
-                            <div class="dropdown-menu dd-menu dropdown-menu-end bg-white shadow rounded border-0 mt-4 py-0" style="width: 300px;">
-                                <form class="p-4">
-                                    <input class="form-control border bg-white" id="text" name="name" placeholder="جستجو کردن ..." type="text"/>
-                                </form>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-
                 <div id="navigation">
                     <!-- Navigation Menu-->
                     <ul class="navigation-menu nav-left nav-light">
-                        <li class="has-submenu parent-parent-menu-item">
-                            <a href="javascript:void(0)">صفحه اصلی</a><span class="menu-arrow"></span>
-                            <ul class="submenu megamenu">
-                                <li>
-                                    <ul>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-startup.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/startup.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-briefcase-alt menu-list-icon align-middle me-1"></i> استارتاپ</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-business.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/business.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-presentation-line menu-list-icon align-middle me-1"></i> کسب و کار</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-corporate.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/corporate.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-chart-pie menu-list-icon align-middle me-1"></i> شرکتی</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-finance.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/finance.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-analytics menu-list-icon align-middle me-1"></i> مالی</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <ul>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-application.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/application.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-mobile-android menu-list-icon align-middle me-1"></i> برنامه های کاربردی</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-saas.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/saas.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-airplay menu-list-icon align-middle me-1"></i> ساس</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-seo.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/seo.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-clapper-board menu-list-icon align-middle me-1"></i> آژانس سئو</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-marketing.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/marketing.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-process menu-list-icon align-middle me-1"></i> بازاریابی</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <ul>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-event.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/event.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-post-stamp menu-list-icon align-middle me-1"></i> رویداد</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-crypto.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/crypto.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-bitcoin-circle menu-list-icon align-middle me-1"></i> رمز ارز</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-restaurant.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/restaurant.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-restaurant menu-list-icon align-middle me-1"></i> رستوران</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-cafe.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/cafe.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-coffee menu-list-icon align-middle me-1"></i> کافه</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <ul>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-personal.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/personal.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-user menu-list-icon align-middle me-1"></i> شخصی</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-portfolio.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/portfolio.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-image-v menu-list-icon align-middle me-1"></i> نمونه کار</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-freelancer.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/freelancer.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-brackets-curly menu-list-icon align-middle me-1"></i> فریلنسر</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                
-                                <li>
-                                    <ul>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-charity.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/charity.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-thumbs-up menu-list-icon align-middle me-1"></i> خیریه</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-personal-blog.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/blog.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-document-layout-left menu-list-icon align-middle me-1"></i> وبلاگ شخصی</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-fashion.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/fashion.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-shopping-bag menu-list-icon align-middle me-1"></i> مد و فشن</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="sub-menu-item" href="index-onepage.html">
-                                                <div class="text-lg-center">
-                                                    <span class="d-none d-lg-block"><img alt="" class="img-fluid rounded shadow-md" src="images/demos/application.png"/></span>
-                                                    <span class="mt-lg-2 d-block"><i class="uil uil-book menu-list-icon align-middle me-1"></i> برنامه (تک صفحه ای)</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>   
-                            </ul>
-                        </li>
-        
-                        <li class="has-submenu parent-parent-menu-item">
-                            <a href="javascript:void(0)">صفحات</a><span class="menu-arrow"></span>
-                            <ul class="submenu">
-                                <li><a class="sub-menu-item" href="page-aboutus.html"> درباره ما </a></li>
-                                <li class="has-submenu parent-menu-item"><a href="javascript:void(0)"> خدمات </a><span class="submenu-arrow"></span>
-                                    <ul class="submenu">
-                                        <li><a class="sub-menu-item" href="page-services.html"> خدمات </a></li>
-                                        <li><a class="sub-menu-item" href="page-services-two.html">خدمات دو</a></li>
-                                        <li><a class="sub-menu-item" href="page-single-service.html">جزئیات خدمات </a></li>
-                                    </ul> 
-                                </li>
-                                <li><a class="sub-menu-item" href="page-faqs.html">پرسش و پاسخ</a></li>
-                                <li><a class="sub-menu-item" href="page-pricing.html"> قیمت گذاری </a></li>
-                                <li><a class="sub-menu-item" href="page-team.html"> تیم </a></li>                                
-                                <li class="has-submenu parent-menu-item"><a href="javascript:void(0)">فروشگاه</a><span class="submenu-arrow"></span>
-                                    <ul class="submenu">
-                                        <li><a class="sub-menu-item" href="shop-grids.html">محصول شبکه ای</a></li>
-                                        <li><a class="sub-menu-item" href="shop-product-detail.html">جزئیات محصول</a></li>
-                                        <li><a class="sub-menu-item" href="shop-cart.html">سبد خرید</a></li>
-                                        <li><a class="sub-menu-item" href="shop-checkout.html">تسویه حساب</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-submenu parent-menu-item"><a href="javascript:void(0)">ویژه</a><span class="submenu-arrow"></span>
-                                    <ul class="submenu">
-                                        <li><a class="sub-menu-item" href="page-comingsoon.html">به زودی</a></li>
-                                        <li><a class="sub-menu-item" href="page-maintenance.html">نگهداری</a></li>
-                                        <li><a class="sub-menu-item" href="page-error.html">خطا</a></li>
-                                    </ul>
-                                </li>
-                                <li><a class="sub-menu-item" href="page-elements.html"> کامپوننت </a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has-submenu parent-parent-menu-item">
-                            <a href="javascript:void(0)"> نمونه کار</a><span class="menu-arrow"></span>
-                            <ul class="submenu megamenu">
-                                <li>
-                                    <ul>
-                                        <li class="megamenu-head">نمونه کار کلاسیک</li>
-                                        <li><a class="sub-menu-item" href="portfolio-classic-two.html">2 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-classic-three.html">3 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-classic-four.html">4 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-classic-five.html">5 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-classic-six.html">6 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-classic-sidebar.html">نمونه کار با سایدبار</a></li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <ul>
-                                        <li class="megamenu-head">نمونه کار خلاقانه</li>
-                                        <li><a class="sub-menu-item" href="portfolio-creative-two.html">2 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-creative-three.html">3 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-creative-four.html">4 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-creative-five.html">5 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-creative-six.html">6 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-creative-sidebar.html">نمونه کار با سایدبار</a></li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <ul>
-                                        <li class="megamenu-head">نمونه کار مدرن</li>
-                                        <li><a class="sub-menu-item" href="portfolio-modern-two.html">2 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-modern-three.html">3 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-modern-four.html">4 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-modern-five.html">5 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-modern-six.html">6 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-modern-sidebar.html">نمونه کار با سایدبار</a></li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <ul>
-                                        <li class="megamenu-head">نمونه کار پازلی</li>
-                                        <li><a class="sub-menu-item" href="portfolio-masonry-two.html">2 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-masonry-three.html">3 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-masonry-four.html">4 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-masonry-five.html">5 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-masonry-six.html">6 ستونه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-masonry-sidebar.html">نمونه کار با سایدبار</a></li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <ul>
-                                        <li class="megamenu-head">جزئیات نمونه کار</li>
-                                        <li><a class="sub-menu-item" href="portfolio-detail-one.html">نمونه کار یک</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-detail-two.html">نمونه کار دو</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-detail-three.html">نمونه کار سه</a></li>
-                                        <li><a class="sub-menu-item" href="portfolio-detail-four.html">نمونه کار چهار</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="has-submenu parent-parent-menu-item">
-                            <a href="javascript:void(0)"> وبلاگ </a><span class="menu-arrow"></span>
-                            <ul class="submenu">
-                                <li class="has-submenu parent-menu-item"><a href="javascript:void(0)"> وبلاگ </a><span class="submenu-arrow"></span>
-                                    <ul class="submenu">
-                                        <li><a class="sub-menu-item" href="blog-grid.html">وبلاگ شبکه ای </a></li>
-                                        <li><a class="sub-menu-item" href="blog-masonry.html">وبلاگ پازلی</a></li>
-                                        <li><a class="sub-menu-item" href="blog-list.html">وبلاگ لیستی </a></li>
-                                        <li><a class="sub-menu-item" href="blog-grid-sidebar.html">وبلاگ با سایدبار </a></li>
-                                        <li><a class="sub-menu-item" href="blog-masonry-sidebar.html">وبلاگ پازلی با سایدبار</a></li>
-                                        <li><a class="sub-menu-item" href="blog-list-sidebar.html">وبلاگ لیستی با سایدبار </a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-submenu parent-menu-item"><a href="javascript:void(0)">وبلاگ تصویری</a><span class="submenu-arrow"></span>
-                                    <ul class="submenu">
-                                        <li><a class="sub-menu-item" href="blog-image-grid.html">وبلاگ شبکه ای </a></li>
-                                        <li><a class="sub-menu-item" href="blog-image-masonry.html">وبلاگ پازلی</a></li>
-                                        <li><a class="sub-menu-item" href="blog-image-grid-sidebar.html">وبلاگ با سایدبار </a></li>
-                                        <li><a class="sub-menu-item" href="blog-image-masonry-sidebar.html">وبلاگ پازلی با سایدبار</a></li>
-                                    </ul> 
-                                </li>
-                                <li class="has-submenu parent-menu-item"><a href="javascript:void(0)">جزئیات وبلاگ </a><span class="submenu-arrow"></span>
-                                    <ul class="submenu">
-                                        <li><a class="sub-menu-item" href="blog-detail-one.html">جزئیات وبلاگ یک</a></li>
-                                        <li><a class="sub-menu-item" href="blog-detail-two.html">جزئیات وبلاگ دو</a></li>
-                                        <li><a class="sub-menu-item" href="blog-detail-three.html">جزئیات وبلاگ سه</a></li>
-                                        <li><a class="sub-menu-item" href="blog-detail-four.html">جزئیات وبلاگ چهار</a></li>
-                                        <li><a class="sub-menu-item" href="blog-detail-five.html">جزئیات وبلاگ پنج</a></li>
-                                    </ul>  
-                                </li>
-                                <li><a class="sub-menu-item" href="blog-author.html">نویسنده</a></li>
-                            </ul>
-                        </li>
-
-                        <li><a class="sub-menu-item" href="page-contact.html"> تماس با ما </a></li>
+                        <li><a class="sub-menu-item" href="index.html"> صفحه اصلی </a></li>
+                        {% if not user_info.is_staff %}
+                        <li><a class="sub-menu-item" href="page-contact.html"> عضویت در کتابخانه </a></li>
+                        <li><a class="sub-menu-item" href="page-contact.html"> رزرو میز مطالعه </a></li>
+                        <li><a class="sub-menu-item" href="page-contact.html"> ثبت درخواست کتاب </a></li>
+                        <li><a class="sub-menu-item" href="page-contact.html"> اهدا کتاب </a></li>
+                        {% endif %}
+                        {% if user_info.is_staff %}
+                        <li><a class="sub-menu-item" href="page-contact.html"> مشاهده لیست اهدا کتاب </a></li>
+                        <li><a class="sub-menu-item" href="page-contact.html"> مشاهده لیست نیازمندی ها </a></li>
+                        {% endif %}
+                        <li><a class="sub-menu-item" href="page-contact.html"> پشتیبانی </a></li>
                     </ul><!--end navigation menu-->
                 </div><!--end navigation-->
             </div><!--end container-->
@@ -406,30 +88,16 @@
                                         <img alt="" height="26" src="{{ url_for('static', filename='images/logo-light.png') }}"/>
                                     </a>
                                     <p class="mt-4">با استارتی شروع به کار کنید که می تواند همه چیز را برای شما فراهم کند.</p>
-                                    <ul class="list-unstyled social-icon foot-social-icon mb-0 mt-4">
-                                        
-                                <li class="list-inline-item"><a class="rounded" href="https://dribbble.com/shreethemes" target="_blank"><i class="uil uil-dribbble align-middle" title="Dribbble"></i></a></li>
-                                <li class="list-inline-item"><a class="rounded" href="https://www.behance.net/shreethemes" target="_blank"><i class="uil uil-behance" title="بیهنس"></i></a></li>
-                                <li class="list-inline-item"><a class="rounded" href="http://linkedin.com/company/shreethemes" target="_blank"><i class="uil uil-linkedin" title="لینکدین"></i></a></li>
-                                <li class="list-inline-item"><a class="rounded" href="https://www.facebook.com/shreethemes" target="_blank"><i class="uil uil-facebook-f align-middle" title="facebook"></i></a></li>
-                                <li class="list-inline-item"><a class="rounded" href="https://www.instagram.com/shreethemes/" target="_blank"><i class="uil uil-instagram align-middle" title="اینستاگرام"></i></a></li>
-                                <li class="list-inline-item"><a class="rounded" href="https://twitter.com/shreethemes" target="_blank"><i class="uil uil-twitter align-middle" title="توییتر"></i></a></li>
-                                
-                                
-                                <li class="list-inline-item"><a class="rounded" href="#" target="_blank"><i class="uil uil-file align-middle" title="خرید از راست‌چبن"></i></a></li>
-                                    </ul><!--end icon-->
                                 </div><!--end col-->
-
                                 <div class="col-lg-8 col-12">
                                     <div class="row">
                                         <div class="col-md-4 col-12 mt-4 mt-lg-0 pt-2 pt-lg-0">
-                                            <h6 class="footer-head">لینک های مفید</h6>
+                                            <h6 class="footer-head">با ما همراه باشید</h6>
                                             <ul class="list-unstyled footer-list mt-4">
-                                                <li><a class="text-foot" href="index.html"><i class="uil uil-angle-left-b me-1"></i> شرایط استفاده</a></li>
-                                                <li><a class="text-foot" href="index.html"><i class="uil uil-angle-left-b me-1"></i> حریم خصوصی</a></li>
+                                                <li><a class="text-foot" href="index.html"><i class="uil uil-angle-left-b me-1"></i> ارتباط با ما</a></li>
                                                 <li><a class="text-foot" href="page-contact.html"><i class="uil uil-angle-left-b me-1"></i> تماس با ما </a></li>
-                                                <li><a class="text-foot" href="index.html"><i class="uil uil-angle-left-b me-1"></i> تغییرات</a></li>
-                                                <li><a class="text-foot" href="page-elements.html"><i class="uil uil-angle-left-b me-1"></i> کامپوننت </a></li>
+                                                <li><a class="text-foot" href="https://www.nlai.ir/" target="_blank"><i class="uil uil-angle-left-b me-1"></i> کتابخانه ملی</a></li>
+                                                <li><a class="text-foot" href="https://isti.ir/" target="_blank"><i class="uil uil-angle-left-b me-1"></i> معاونت علمی ریاست جمهوری </a></li>
                                             </ul>
                                         </div><!--end col-->
                                     </div>
@@ -452,6 +120,9 @@
                 </div><!--end container-->
             </div>
         </footer><!--end footer-->
+        <!-- Back to top -->
+        <a class="back-to-top rounded-pill" href="javascript:void(0)" id="back-to-top" onclick="topFunction()"><i class="mdi mdi-arrow-up"></i></a>
+        <!-- Back to top -->
         <!-- End -->
         <!-- javascript -->
         <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>

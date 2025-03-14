@@ -64,7 +64,8 @@ def logout():
 @app.route('/')
 @login_required
 def home():
-    return render_template('index.html')
+    user_info = db.users.get_user(current_user.id)
+    return render_template('index.html', user_info=user_info)
 
 # @app.route('/mission')
 # def mission():
