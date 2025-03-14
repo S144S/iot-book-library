@@ -63,12 +63,12 @@
                         </div>
 
                         <div class="content mt-4">
-                            <a class="title h5 text-dark" href="page-single-service.html">ثبت نیاز به کتاب</a>
+                            <a class="title h5 text-dark" href="{{ url_for('request_book') }}">ثبت نیاز به کتاب</a>
 
                             <p class="text-muted mt-3">اگر کتاب مورد نظرتان را در کتابخانه پیدا نکردید، می‌توانید نیاز خود را ثبت کنید تا ما برای تهیه آن اقدام کنیم.</p>
                         </div>
 
-                        <a href="page-single-service.html">
+                        <a href="{{ url_for('request_book') }}">
                             <span class="text-dark">عملیات ثبت <i class="uil uil-arrow-left"></i></span>
                         </a>
                     </div>
@@ -88,7 +88,7 @@
                         <h4 class="title mb-4">کتاب های بلااستفاده شما لبخند آفرین دیگران است.</h4>
                         <p class="text-muted para-desc mb-0">کافیست در فرآیند اهدا کتاب در کتابخانه شرکت کنید تا دانش را گسترش دهید.</p>
                         <div class="my-4">
-                            <a class="btn btn-lg btn-dark mt-2 me-2" href="javascript:void(0)"><i class="uil uil-flower"></i> همین حالا شروع کنید!</a>
+                            <a class="btn btn-lg btn-dark mt-2 me-2" href="{{ url_for('ehda') }}"><i class="uil uil-flower"></i> همین حالا شروع کنید!</a>
                         </div>
                     </div>
                 </div><!--end col-->
