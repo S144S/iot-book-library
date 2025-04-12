@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from datetime import datetime
+import jdatetime
 
 from flask_login import UserMixin
 
@@ -324,6 +325,98 @@ class SubscribedUsers:
             return []
 
 
+class TableReservation:
+    def __init__(self, db: str) -> None:
+        self.__db = db
+
+    def setup(self) -> None:
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("PRAGMA foreign_keys = ON")
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS table_reservation (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER NOT NULL,
+                    date DATE NOT NULL,
+                    hour INTEGER NOT NULL,
+                    table_no INTEGER NOT NULL CHECK(table_no IN (1, 2, 3, 4)),
+                    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """)
+            conn.commit()
+
+    def add_reservation(self, user_id: int, jalali_date: str, hour: int, table_no: int) -> bool:
+        """
+        Adds a new reservation for a user with a given Jalali date, hour, and table number.
+        """
+        try:
+            # Convert Jalali date to Gregorian
+            jdate = jdatetime.datetime.strptime(jalali_date, "%Y/%m/%d")
+            gregorian_date = jdate.togregorian().date()  # Convert to Gregorian date
+            
+            # Check if the table is already reserved at this hour
+            if not self.is_table_available(gregorian_date, hour, table_no):
+                print(f"Table {table_no} is already reserved for {gregorian_date} at {hour}:00.")
+                return False
+
+            # Insert into table_reservation table
+            with sqlite3.connect(self.__db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO table_reservation (user_id, date, hour, table_no)
+                    VALUES (?, ?, ?, ?)
+                """, (user_id, gregorian_date, hour, table_no))
+                conn.commit()
+
+            print(f"Reservation for table {table_no} on {gregorian_date} at {hour}:00 added successfully.")
+            return True
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return False
+
+    def is_table_available(self, date: str, hour: int, table_no: int) -> bool:
+        """
+        Checks if the table is available for the given date and hour.
+        """
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT 1 FROM table_reservation
+                WHERE date = ? AND hour = ? AND table_no = ?
+            """, (date, hour, table_no))
+            return cursor.fetchone() is None
+
+    def get_table_status(self, date: str, hour: int) -> dict:
+        """
+        Gets the reservation status of each table for a given date and hour.
+        
+        :param date: Date in Gregorian format (YYYY-MM-DD).
+        :param hour: Hour in 24-hour format (e.g., 15 for 3 PM).
+        
+        :return: A dictionary with table numbers as keys and reservation status as values.
+                e.g. {'table1': False, 'table2': True, ...}
+        """
+        table_status = {'table1': False, 'table2': False, 'table3': False, 'table4': False}
+
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT table_no FROM table_reservation
+                WHERE date = ? AND hour = ?
+            """, (date, hour))
+
+            reserved_tables = cursor.fetchall()
+            reserved_tables = [row[0] for row in reserved_tables]
+
+            # Mark reserved tables as True
+            for table_no in reserved_tables:
+                if f'table{table_no}' in table_status:
+                    table_status[f'table{table_no}'] = True
+
+        return table_status
+
+
 class DBHelper:
     def __init__(self, db_file: str = "database.db") -> None:
         """
@@ -336,11 +429,13 @@ class DBHelper:
         self.db_file = db_file
         self.users = Users(self.db_file)
         self.subscribed_users = SubscribedUsers(self.db_file)
+        self.reservation = TableReservation(self.db_file)
 
 
     def create_tables(self):
         self.users.setup()
         self.subscribed_users.setup()
+        self.reservation.setup()
         print("Database and tables created successfully!")
 
 
