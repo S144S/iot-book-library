@@ -105,11 +105,13 @@ def ehda():
         subject = request.form["subject"]
         address = request.form["address"]
         description = request.form["description"]
-        # TODO: Add donated book into the database
         if not book_name or not author or not publisher or not address:
             flash('افزودن نام کتاب، نویسنده، ناشر و آدرس الزامی است!!', 'danger')
         else:
-            flash('فرم اهدا با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
+            if db.donated_books.add_donated_book(current_user.id, book_name, author, publisher, address, subject, description):
+                flash('فرم اهدا با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
+            else:
+                flash('خطا در ثبت اهدا، لطفا دوباره امتحان کنید.', 'danger')
     return render_template('ehda.html', user_info=user_info)
 
 @app.route('/request-book', methods=['GET', 'POST'])
@@ -122,11 +124,13 @@ def request_book():
         publisher = request.form["publisher"]
         subject = request.form["subject"]
         description = request.form["description"]
-        # TODO: Add donated book into the database
         if not book_name or not author or not publisher:
             flash('افزودن نام کتاب، نویسنده و ناشر الزامی است!!', 'danger')
         else:
-            flash('فرم اهدا با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
+            if db.requested_books.add_requested_book(current_user.id, book_name, author, publisher, subject, description):
+                flash('فرم درخواست با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
+            else:
+                flash('خطا در ثبت درخواست، لطفا دوباره امتحان کنید.', 'danger')
     return render_template('book_req.html', user_info=user_info)
 
 

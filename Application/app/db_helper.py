@@ -454,6 +454,163 @@ class TableReservation:
         return availability
 
 
+class RequestedBooks:
+    def __init__(self, db: str) -> None:
+        self.__db = db
+
+    def setup(self) -> None:
+        """
+        Creates the requested_books table in the database.
+        """
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS requested_books (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    author TEXT NOT NULL,
+                    publisher TEXT NOT NULL,
+                    subject TEXT,
+                    description TEXT,
+                    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """)
+            conn.commit()
+
+    def add_requested_book(self, user_id: int, name: str, author: str, publisher: str, subject: str = None, description: str = None) -> bool:
+        """
+        Adds a new requested book to the requested_books table.
+
+        :param user_id: ID of the user who requested the book.
+        :param name: Name of the book.
+        :param author: Author of the book.
+        :param publisher: Publisher of the book.
+        :param subject: Subject of the book (optional, may be null).
+        :param description: Description of the book (optional, may be null).
+        :return: True if the book was added successfully, False otherwise.
+        """
+        try:
+            with sqlite3.connect(self.__db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO requested_books (user_id, name, author, publisher, subject, description)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (user_id, name, author, publisher, subject, description))
+                conn.commit()
+            return True
+        except Exception as e:
+            print(f"An error occurred to add requested book: {e}")
+            return False
+        
+
+    def get_all_requested_books(self) -> dict:
+        """
+        Returns all requested books as a dictionary.
+
+        :return: A dictionary where keys are the book IDs and values are dictionaries with book details.
+        """
+        requested_books = {}
+
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, user_id, name, author, publisher, subject, description FROM requested_books")
+            rows = cursor.fetchall()
+
+            for row in rows:
+                book_id, user_id, name, author, publisher, subject, description = row
+                requested_books[book_id] = {
+                    'user_id': user_id,
+                    'name': name,
+                    'author': author,
+                    'publisher': publisher,
+                    'subject': subject,
+                    'description': description
+                }
+
+        return requested_books
+
+
+class DonateBooks:
+    def __init__(self, db: str) -> None:
+        self.__db = db
+
+    def setup(self) -> None:
+        """
+        Creates the donate_books table in the database.
+        """
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS donate_books (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    author TEXT NOT NULL,
+                    publisher TEXT NOT NULL,
+                    address TEXT NOT NULL,
+                    subject TEXT,
+                    description TEXT,
+                    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """)
+            conn.commit()
+
+    def add_donated_book(self, user_id: int, name: str, author: str, publisher: str, address: str, subject: str = None, description: str = None) -> bool:
+        """
+        Adds a new donated book to the donate_books table.
+
+        :param user_id: ID of the user who donated the book.
+        :param name: Name of the book.
+        :param author: Author of the book.
+        :param publisher: Publisher of the book.
+        :param address: Address related to the donation.
+        :param subject: Subject of the book (optional, may be null).
+        :param description: Description of the book (optional, may be null).
+        :return: True if the book was added successfully, False otherwise.
+        """
+        try:
+            with sqlite3.connect(self.__db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO donate_books (user_id, name, author, publisher, address, subject, description)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (user_id, name, author, publisher, address, subject, description))
+                conn.commit()
+            return True
+        except Exception as e:
+            print(f"An error occurred to add donated book: {e}")
+            return False
+        
+
+    def get_all_donated_books(self) -> dict:
+        """
+        Returns all donated books as a dictionary.
+
+        :return: A dictionary where keys are the book IDs and values are dictionaries with book details.
+        """
+        donated_books = {}
+
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, user_id, name, author, publisher, address, subject, description FROM donate_books")
+            rows = cursor.fetchall()
+
+            for row in rows:
+                book_id, user_id, name, author, publisher, address, subject, description = row
+                donated_books[book_id] = {
+                    'user_id': user_id,
+                    'name': name,
+                    'author': author,
+                    'publisher': publisher,
+                    'address': address,
+                    'subject': subject,
+                    'description': description
+                }
+
+        return donated_books
+
+
 class DBHelper:
     def __init__(self, db_file: str = "database.db") -> None:
         """
@@ -467,12 +624,16 @@ class DBHelper:
         self.users = Users(self.db_file)
         self.subscribed_users = SubscribedUsers(self.db_file)
         self.reservation = TableReservation(self.db_file)
+        self.requested_books = RequestedBooks(self.db_file)
+        self.donated_books = DonateBooks(self.db_file)
 
 
     def create_tables(self):
         self.users.setup()
         self.subscribed_users.setup()
         self.reservation.setup()
+        self.requested_books.setup()
+        self.donated_books.setup()
         print("Database and tables created successfully!")
 
 
