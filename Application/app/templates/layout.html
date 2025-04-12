@@ -55,7 +55,7 @@
                         <li><a class="sub-menu-item" href="{{ url_for('home') }}"> خانه </a></li>
                         <li><a class="sub-menu-item" href="page-contact.html"> جستجو کتاب </a></li>
                         {% if not user_info.is_staff %}
-                        <li><a class="sub-menu-item" href="page-contact.html"> عضویت در کتابخانه </a></li>
+                        <li><a class="sub-menu-item" href="{{ url_for('subscribe') }}"> عضویت در کتابخانه </a></li>
                         <li><a class="sub-menu-item" href="{{ url_for('reserve') }}"> رزرو میز مطالعه </a></li>
                         <li><a class="sub-menu-item" href="{{ url_for('request_book') }}"> ثبت درخواست کتاب </a></li>
                         <li><a class="sub-menu-item" href="{{ url_for('ehda') }}"> اهدا کتاب </a></li>

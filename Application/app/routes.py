@@ -73,6 +73,18 @@ def contact():
     user_info = db.users.get_user(current_user.id)
     return render_template('contact.html', user_info=user_info)
 
+@app.route('/subscribe', methods=['GET', 'POST'])
+@login_required
+def subscribe():
+    user_info = db.users.get_user(current_user.id)
+    if request.method == "POST":
+        national_id = request.form["national_id"]
+        # TODO: Add donated book into the database
+        if not national_id:
+            flash('افزودن کد ملی الزامی است!!', 'danger')
+        else:
+            flash('عضویت شما با موفقیت انجام شد.', 'success')
+    return render_template('subscribe.html', user_info=user_info)
 
 @app.route('/ehda', methods=['GET', 'POST'])
 @login_required

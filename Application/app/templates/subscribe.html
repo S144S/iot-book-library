@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>اهدا کتاب</title>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Start -->
+    <section class="bg-half-170 d-table w-100" style="background: url('static/images/bg/about.jpg') center;">
+        <div class="bg-overlay bg-gradient-overlay"></div>
+        <div class="container">
+            <div class="row mt-5 justify-content-center">
+                <div class="col-12">
+                    <div class="title-heading text-center">
+                        <small class="text-white-50 mb-1 fw-medium text-uppercase mx-auto">به دنیای دانش وارد شوید با</small>
+                        <h5 class="heading fw-semibold mb-0 page-heading text-white title-dark"> عضویت در کتابخانه </h5>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+
+            <div class="position-middle-bottom">
+                <nav aria-label="breadcrumb" class="d-block">
+                    <ul class="breadcrumb breadcrumb-muted mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('home') }}"> خانه </a></li>
+                        <li aria-current="page" class="breadcrumb-item active"> عضویت در کتابخانه </li>
+                    </ul>
+                </nav>
+            </div>
+        </div><!--end container-->
+    </section><!--end section-->
+    <!-- Hero End -->
+
+        <!-- Forms Start -->
+    <div class="col pt-2 picture-item">
+        <div class="component-wrapper rounded shadow">
+            <div class="p-4 border-bottom text-center">
+                <h4 class="title mb-0"> فرم عضویت </h4>
+                <small>برای عضویت در کتابخانه کافیست کد ملی خود را ثبت کنید، از کد ملی برای ورود و امانت گرفتن کتاب استفاده خواهد شد.</small>
+            </div>
+
+            <div class="p-4">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <form action="{{ url_for('subscribe') }}" method="POST" novalidate>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">کد ملی <span class="text-danger">*</span></label>
+                                <input class="form-control" id="national_id" name="national_id" placeholder="کد ملی خود را وارد کنید"/>
+                            </div>                                                                               
+                    </div><!--end row-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input class="btn btn-primary" id="submit" name="send" type="submit" value="عضویت"/>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </form><!--end form-->
+            </div>
+        </div>
+    </div><!--end col-->
+    <!-- Forms End -->
+
+    
+{% endblock %}
