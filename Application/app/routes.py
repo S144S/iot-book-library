@@ -78,12 +78,19 @@ def contact():
 def subscribe():
     user_info = db.users.get_user(current_user.id)
     if request.method == "POST":
-        national_id = request.form["national_id"]
+        national_id = str(request.form["national_id"])
         # TODO: Add donated book into the database
         if not national_id:
             flash('افزودن کد ملی الزامی است!!', 'danger')
+        elif len(national_id) != 10:
+            flash('کد ملی باید 10 رقم باشد!', 'danger')
         else:
-            flash('عضویت شما با موفقیت انجام شد.', 'success')
+            done = db.subscribed_users.add_subscribed_user(int(current_user.id), national_id)
+            if done:
+                flash('عضویت شما با موفقیت انجام شد.', 'success')
+            else:
+                flash('خطا در عضویت، لطفا دوباره امتحان کنید.', 'danger')
+
     return render_template('subscribe.html', user_info=user_info)
 
 @app.route('/ehda', methods=['GET', 'POST'])
@@ -159,3 +166,9 @@ def check_table():
         'table4': table4
     })
 
+
+## HARDWARE APIs
+@app.route('/get_national_ids', methods=['GET'])
+def get_national_ids():
+    national_ids = db.subscribed_users.get_all_national_ids()
+    return jsonify({'national_ids': national_ids})

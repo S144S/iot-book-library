@@ -307,6 +307,22 @@ class SubscribedUsers:
             print(f"Unexpected error: {e}")
             return False
 
+    def get_all_national_ids(self) -> list[str]:
+        """
+        Retrieves all national_id values from the Subscribed_users table.
+
+        :return: A list of national_id strings
+        """
+        try:
+            with sqlite3.connect(self.__db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT national_id FROM Subscribed_users")
+                rows = cursor.fetchall()
+                return [row[0] for row in rows]
+        except Exception as e:
+            print(f"Error retrieving national_ids: {e}")
+            return []
+
 
 class DBHelper:
     def __init__(self, db_file: str = "database.db") -> None:
