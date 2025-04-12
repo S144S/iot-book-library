@@ -398,13 +398,14 @@ class TableReservation:
                 e.g. {'table1': False, 'table2': True, ...}
         """
         table_status = {'table1': False, 'table2': False, 'table3': False, 'table4': False}
-
+        jdate = jdatetime.datetime.strptime(date, "%Y/%m/%d")
+        gregorian_date = jdate.togregorian().date()
         with sqlite3.connect(self.__db) as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 SELECT table_no FROM table_reservation
                 WHERE date = ? AND hour = ?
-            """, (date, hour))
+            """, (gregorian_date, hour))
 
             reserved_tables = cursor.fetchall()
             reserved_tables = [row[0] for row in reserved_tables]
@@ -415,6 +416,42 @@ class TableReservation:
                     table_status[f'table{table_no}'] = True
 
         return table_status
+
+    def get_table_availability_for_now(self) -> dict:
+        """
+        Returns the availability status of all tables for now and the specified hour.
+        
+        :return: A dictionary with table availability status, where key is 'table1', 'table2', etc., 
+                and the value is True (reserved) or False (available).
+        """
+        # Get today's Gregorian date
+        today = jdatetime.datetime.now().togregorian().date()
+        hour = datetime.now().hour
+
+        # Initialize the availability dictionary for each table
+        availability = {
+            'table1': False,
+            'table2': False,
+            'table3': False,
+            'table4': False
+        }
+
+        with sqlite3.connect(self.__db) as conn:
+            cursor = conn.cursor()
+
+            # Query reservations for today and check against the requested hour
+            cursor.execute("""
+                SELECT table_no, hour FROM table_reservation
+                WHERE date = ? AND (hour = ? OR (hour = ? + 2))
+            """, (today, hour, hour))  # We check both for the exact hour and the one before (for 2-hour reservations)
+
+            rows = cursor.fetchall()
+
+            for row in rows:
+                table_no = row[0]
+                availability[f'table{table_no}'] = True
+
+        return availability
 
 
 class DBHelper:

@@ -42,25 +42,25 @@ $(document).ready(function() {
 
 
     function updateTableAvailability(data) {
-        if (data.table1 === true) {
+        if (data.table1 === false) {
             $('#table1').removeClass('reserved').addClass('pointer-cursor').addClass('available-table');
         } else {
             $('#table1').removeClass('available-table').removeClass('pointer-cursor').addClass('reserved');
         }
         
-        if (data.table2 === true) {
+        if (data.table2 === false) {
             $('#table2').removeClass('reserved').addClass('pointer-cursor').addClass('available-table');
         } else {
             $('#table2').removeClass('available-table').removeClass('pointer-cursor').addClass('reserved');
         }
 
-        if (data.table3 === true) {
+        if (data.table3 === false) {
             $('#table3').removeClass('reserved').addClass('pointer-cursor').addClass('available-table');
         } else {
             $('#table3').removeClass('available-table').removeClass('pointer-cursor').addClass('reserved');
         }
 
-        if (data.table4 === true) {
+        if (data.table4 === false) {
             $('#table4').removeClass('reserved').addClass('pointer-cursor').addClass('available-table');
         } else {
             $('#table4').removeClass('available-table').removeClass('pointer-cursor').addClass('reserved');
