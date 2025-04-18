@@ -1,6 +1,7 @@
 #include <WiFi.h>         // کتابخانه اتصال به وایفای
 #include <HTTPClient.h>   // کتابخانه ارسال درخواست اینترنتی
 #include <ArduinoJson.h>  // کتابخانه جداسازی اطلاعات دریافت شده از طریق اینترنت
+#include <Keypad.h>       // کتابخانه کار با کیپد
 
 // لیست اینترنت های مجاز همراه پسورد
 const char* ssidList[] = {
@@ -18,6 +19,7 @@ const int numNetworks = sizeof(ssidList) / sizeof(ssidList[0]);  // تعداد �
 
 // لیست پایه ها
 const int WIFI_LED = 2;
+const int LOCK_PIN = 4;
 
 
 const char* webapp = "http://192.168.100.108:5000";  // آدرس سایت
@@ -29,6 +31,22 @@ int nationalIdCount = 0;                                                     // 
 String nationalIdsJson = "";                                                 // برای ذخیره پاسخ get_national_ids
 String defaultIds = "{\"national_ids\": [\"0440386624\", \"0922213372\"]}";  // مقادیر پیشفرض کدملی
 
+// آماده سازی کیپد
+const byte ROWS = 4;
+const byte COLS = 3;
+char keys[ROWS][COLS] = {
+  { '1', '2', '3' },
+  { '4', '5', '6' },
+  { '7', '8', '9' },
+  { '*', '0', '#' }
+};
+byte rowPins[ROWS] = { 12, 14, 27, 26 };
+byte colPins[COLS] = { 25, 33, 32 };
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+String input_national_id = "";
+char key;
+const int LOCK_WAIT = 7000;
+
 
 void setup() {
   // راه اندازی سریال مانیتورینگ
@@ -38,6 +56,8 @@ void setup() {
   // تعریف پایه های ورودی و خروجی
   pinMode(WIFI_LED, OUTPUT);
   digitalWrite(WIFI_LED, LOW);  // خاموش کردن LED در ابتدا
+  pinMode(LOCK_PIN, OUTPUT);
+  digitalWrite(LOCK_PIN, HIGH);  // قفل بسته
   // اتصال به به اینترنت و دریافت کدملی ها
   bool connected = tryConnectToWiFi();
   if (connected) {
@@ -50,6 +70,24 @@ void setup() {
 }
 
 void loop() {
+  while (key != '*') {  // assuming all national IDs have 10 digits
+    key = keypad.getKey();
+    if (key) {
+      Serial.print(key);
+      input_national_id += key;
+    }
+  }
+  Serial.println();
+  // پاک کردن * آخر
+  input_national_id.remove(input_national_id.length() - 1);
+  if (isAuthorized(input_national_id)) {
+    Serial.printf("✅ Access Granted for %s\n", input_national_id);
+    unlockDoor();
+  } else {
+    Serial.printf("❌ Access Denied for %s\n", input_national_id);
+  }
+  key = '#';
+  input_national_id = "";
 }
 
 // تابع اتصال به یکی از SSIDها
@@ -85,7 +123,7 @@ bool tryConnectToWiFi() {
 
   nationalIdsJson = defaultIds;
   parseNationalIds(nationalIdsJson);
-  return false;                       // هیچ شبکه‌ای وصل نشد
+  return false;  // هیچ شبکه‌ای وصل نشد
 }
 
 // تابع ارسال درخواست GET به آدرس مشخص از سرور اپ
@@ -170,4 +208,21 @@ void parseNationalIds(const String& json) {
   for (int i = 0; i < nationalIdCount; i++) {
     Serial.printf("  %d. %s\n", i + 1, nationalIds[i].c_str());
   }
+}
+
+// تابع بررسی وجود کد ملی در لیست
+bool isAuthorized(String input) {
+  for (int i = 0; i < nationalIdCount; i++) {
+    if (nationalIds[i] == input) return true;
+  }
+  return false;
+}
+
+// تابع باز کردن درب
+void unlockDoor() {
+  digitalWrite(LOCK_PIN, LOW);
+  Serial.println("🔓 Lock OPENED");
+  delay(LOCK_WAIT);
+  digitalWrite(LOCK_PIN, HIGH);
+  Serial.println("🔒 Lock CLOSED");
 }
