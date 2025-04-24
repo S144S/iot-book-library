@@ -2,6 +2,9 @@
 #include <HTTPClient.h>   // کتابخانه ارسال درخواست اینترنتی
 #include <ArduinoJson.h>  // کتابخانه جداسازی اطلاعات دریافت شده از طریق اینترنت
 #include <Keypad.h>       // کتابخانه کار با کیپد
+#include <SPI.h>          // کتابخانه رابط RFID
+#include <MFRC522.h>      // کتابخانه کار با RFID
+
 
 // لیست اینترنت های مجاز همراه پسورد
 const char* ssidList[] = {
@@ -20,6 +23,8 @@ const int numNetworks = sizeof(ssidList) / sizeof(ssidList[0]);  // تعداد �
 // لیست پایه ها
 const int WIFI_LED = 2;
 const int LOCK_PIN = 4;
+const int RFID_SS = 5;
+const int RFID_RST = 22;
 
 
 const char* webapp = "http://192.168.100.108:5000";  // آدرس سایت
@@ -47,17 +52,27 @@ String input_national_id = "";
 char key;
 const int LOCK_WAIT = 7000;
 
+// راه اندازی RFID
+MFRC522 rfid(RFID_SS, RFID_RST);
+
 
 void setup() {
   // راه اندازی سریال مانیتورینگ
   delay(2000);
   Serial.begin(115200);
-  Serial.println("Welcome to the IoT Library 😊");
+  Serial.println("🚀 Smart Library Booting...");
+  // ستاپ اولیه RFID
+  SPI.begin();
+  rfid.PCD_Init();
+  delay(500);
+  Serial.println("🟢 RFID is Ready");
   // تعریف پایه های ورودی و خروجی
   pinMode(WIFI_LED, OUTPUT);
   digitalWrite(WIFI_LED, LOW);  // خاموش کردن LED در ابتدا
   pinMode(LOCK_PIN, OUTPUT);
   digitalWrite(LOCK_PIN, HIGH);  // قفل بسته
+  delay(200);
+  Serial.println("🟢 PINS are Ready");
   // اتصال به به اینترنت و دریافت کدملی ها
   bool connected = tryConnectToWiFi();
   if (connected) {
@@ -67,10 +82,26 @@ void setup() {
     Serial.println("No network available!.");
     digitalWrite(WIFI_LED, LOW);  // LED خاموش
   }
+  Serial.println("🟢 System is Ready");
 }
 
 void loop() {
-  while (key != '*') {  // assuming all national IDs have 10 digits
+  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+    String uid = "";
+    for (byte i = 0; i < rfid.uid.size; i++) {
+      uid += String(rfid.uid.uidByte[i], HEX);
+    }
+    uid.toUpperCase();
+    Serial.println("🔍 Detected UID: " + uid);
+
+    // postUIDToServer(uid);
+
+    rfid.PICC_HaltA();
+    rfid.PCD_StopCrypto1();
+    delay(1000);  // برای جلوگیری از ارسال چندباره
+  }
+
+  while (key != '*') {  // فشردن کلید * برای تایید
     key = keypad.getKey();
     if (key) {
       Serial.print(key);
@@ -178,6 +209,26 @@ void sendGETRequest(const String& endpoint) {
     http.end();  // اطمینان از آزادسازی منابع
   } else {
     Serial.println("🚫 Internet Problem!.");
+  }
+}
+
+// تابع ارسال آیدی کتاب به اپ
+void postUIDToServer(const String& uid) {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = String(webapp) + "/rent_book";
+    http.begin(url);
+    http.addHeader("Content-Type", "application/json");
+    String payload = "{\"uid\": \"" + uid + "\"}";
+    int responseCode = http.POST(payload);
+
+    Serial.printf("📤 POST /rent_book Status: %d\n", responseCode);
+    if (responseCode > 0)
+      Serial.println("📄 Response: " + http.getString());
+
+    http.end();
+  } else {
+    Serial.println("🚫 Cannot send UID, no Internet");
   }
 }
 
