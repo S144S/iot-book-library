@@ -325,6 +325,22 @@ class SubscribedUsers:
             print(f"Error retrieving national_ids: {e}")
             return []
 
+    def get_all_subscribers(self) -> List[Dict]:
+        
+        """
+        Retrieves all subscribers from the Subscribed_users table.
+
+        :return: A list of dictionaries containing subscriber information.
+        """
+        try:
+            with sqlite3.connect(self.__db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT user_id, national_id FROM Subscribed_users")
+                rows = cursor.fetchall()
+                return [{'user_id': row[0], 'national_id': row[1]} for row in rows]
+        except Exception as e:
+            print(f"Error retrieving subscribers: {e}")
+            return []
 
 class TableReservation:
     def __init__(self, db: str) -> None:
@@ -502,8 +518,7 @@ class RequestedBooks:
             return True
         except Exception as e:
             print(f"An error occurred to add requested book: {e}")
-            return False
-        
+            return False 
 
     def get_all_requested_books(self) -> dict:
         """

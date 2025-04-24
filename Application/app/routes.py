@@ -251,3 +251,21 @@ def list_request():
             'publisher': book_info.get('publisher', '')
         })
     return render_template('list_request.html', user_info=user_info, books=result)
+
+@app.route('/members')
+@login_required
+def members():
+    user_info = db.users.get_user(current_user.id)
+    members = db.subscribed_users.get_all_subscribers()
+    result = []
+    for member in members:
+        user = db.users.get_user(member['user_id'])
+        if user:
+            result.append({
+                'fname': user.get('fname', ''),
+                'lname': user.get('lname', ''),
+                'national_id': member.get('national_id', ''),
+                'phone': user.get('phone', ''),
+                'is_active': user.get('is_active', False)
+            })
+    return render_template('members.html', user_info=user_info, members=result)
