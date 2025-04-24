@@ -173,19 +173,6 @@ def check_table():
         'table4': tabels.get('table4', False)
     })
 
-
-## HARDWARE APIs
-@app.route('/get_national_ids', methods=['GET'])
-def get_national_ids():
-    national_ids = db.subscribed_users.get_all_national_ids()
-    return jsonify({'national_ids': national_ids})
-
-
-@app.route('/get_reservation', methods=['GET'])
-def get_reservation():
-    availability = db.reservation.get_table_availability_for_now()
-    return jsonify({'availability': availability})
-
 @app.route('/books', methods=['GET', 'POST'])
 @login_required
 def books():
@@ -297,4 +284,37 @@ def rent():
             result.append(info)
     print(result)
     return render_template('rent_list.html', user_info=user_info, items=result)
+
+@app.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+    books = []
+    user_info = db.users.get_user(current_user.id)
+    if request.method == "POST":
+        book_name = request.form["name"].strip()
+        author = request.form["writer"].strip()
+        publisher = request.form["publisher"].strip()
+        if not book_name and not author and not publisher:
+            flash('وارد کردن حداقل یک فیلد اجباری است!!', 'danger')
+        else:
+            if book_name:
+                books.append(db.books.get_book_by_name(book_name))
+            if author:
+                books.append(db.books.get_book_by_author(author))
+            if publisher:
+                books.append(db.books.get_book_by_publisher(publisher))
+    return render_template('search.html', user_info=user_info, books=books)
+
+
+## HARDWARE APIs
+@app.route('/get_national_ids', methods=['GET'])
+def get_national_ids():
+    national_ids = db.subscribed_users.get_all_national_ids()
+    return jsonify({'national_ids': national_ids})
+
+
+@app.route('/get_reservation', methods=['GET'])
+def get_reservation():
+    availability = db.reservation.get_table_availability_for_now()
+    return jsonify({'availability': availability})
 
