@@ -1,6 +1,7 @@
 from flask import flash, redirect, render_template, request, url_for, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 import jdatetime
+import datetime
 
 from app import UserManagement, app, bcrypt, db, login_manager
 
@@ -269,3 +270,31 @@ def members():
                 'is_active': user.get('is_active', False)
             })
     return render_template('members.html', user_info=user_info, members=result)
+
+@app.route('/rent')
+@login_required
+def rent():
+    user_info = db.users.get_user(current_user.id)
+    rents = db.rent.get_all_rents()
+    print(rents)
+    result = []
+    for rent in rents:
+        info = {}
+        user = db.users.get_user(rent['user_id'])
+        book = db.books.get_book_by_id(rent['book_id'])
+        if user and book:
+            info['fname'] = user.get('fname', '')
+            info['lname'] = user.get('lname', '')
+            info['phone'] = user.get('phone', '')
+            info['national_id'] = db.subscribed_users.get_subscriber_by_user_id(rent['user_id']).get('national_id', '')
+            info['book_name'] = book.get('name', '')
+            gdate = rent.get('due_date', '')
+            year, month, day = map(int, gdate.split('-'))
+            gregorian_date = datetime.date(year, month, day)
+            jalali_date = jdatetime.date.fromgregorian(date=gregorian_date)
+            info['due_date'] = f"{jalali_date.year}/{jalali_date.month:02}/{jalali_date.day:02}"
+            info['is_return'] = rent.get('is_return', False)
+            result.append(info)
+    print(result)
+    return render_template('rent_list.html', user_info=user_info, items=result)
+

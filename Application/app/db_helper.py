@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 import jdatetime
 from typing import Dict, List
 
@@ -341,6 +341,25 @@ class SubscribedUsers:
         except Exception as e:
             print(f"Error retrieving subscribers: {e}")
             return []
+
+    def get_subscriber_by_user_id(self, user_id: int) -> Dict:
+        """
+        Retrieves a subscriber's information by their user ID.
+
+        :param user_id: ID of the user to retrieve
+        :return: A dictionary containing subscriber information or an empty dictionary if not found
+        """
+        try:
+            with sqlite3.connect(self.__db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT national_id FROM Subscribed_users WHERE user_id = ?", (user_id,))
+                row = cursor.fetchone()
+                if row:
+                    return {'user_id': user_id, 'national_id': row[0]}
+                return {}
+        except Exception as e:
+            print(f"Error retrieving subscriber by user_id: {e}")
+            return {}
 
 class TableReservation:
     def __init__(self, db: str) -> None:
@@ -736,6 +755,108 @@ class Books:
             return []
 
 
+class RentBooks:
+    def __init__(self, db: str) -> None:
+        """
+        Constructor for managing the rent_books table.
+
+        :param db: Path to the SQLite database file.
+        """
+        self.__db = db
+
+    def setup(self) -> None:
+        """
+        Creates the rent_books table if it doesn't exist.
+        """
+        self.conn = sqlite3.connect(self.__db)
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS rent_books (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                book_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                due_date DATE DEFAULT (DATE('now', '+7 days')),
+                is_return BOOLEAN DEFAULT 0,
+                FOREIGN KEY(book_id) REFERENCES books(id),
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )
+        """)
+        self.conn.commit()
+        self.conn.close()
+
+    def add_rent(self, book_id: int, user_id: int, due_date: str = None) -> bool:
+        """
+        Adds a new rent record.
+
+        :param book_id: ID of the rented book
+        :param user_id: ID of the user renting the book
+        :param due_date: Optional due date in 'YYYY-MM-DD' format
+        :return: Boolean status of the operation
+        """
+        if not due_date:
+            due_date = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        is_return = False
+        sql = """
+        INSERT INTO rent_books (book_id, user_id, due_date, is_return)
+        VALUES (?, ?, ?, ?)
+        """
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            cursor = self.conn.cursor()
+            cursor.execute(sql, (book_id, user_id, due_date, is_return))
+            self.conn.commit()
+            self.conn.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def get_all_rents(self) -> list:
+        """
+        Retrieves all rent records as a list of dictionaries.
+
+        :return: List of all rent records
+        """
+        sql = """
+        SELECT * FROM rent_books
+        """
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            self.conn.row_factory = sqlite3.Row
+            cursor = self.conn.cursor()
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            result = [dict(row) for row in rows]
+            self.conn.close()
+            return result
+        except Exception as e:
+            print(e)
+            return []
+
+    def get_rents_by_user(self, user_id: int) -> list:
+        """
+        Retrieves rent records for a specific user.
+
+        :param user_id: ID of the user
+        :return: List of rent records
+        """
+        sql = """
+        SELECT * FROM rent_books WHERE user_id = ?
+        """
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            self.conn.row_factory = sqlite3.Row
+            cursor = self.conn.cursor()
+            cursor.execute(sql, (user_id,))
+            rows = cursor.fetchall()
+            result = [dict(row) for row in rows]
+            self.conn.close()
+            return result
+        except Exception as e:
+            print(e)
+            return []
+
+
 class DBHelper:
     def __init__(self, db_file: str = "database.db") -> None:
         """
@@ -752,6 +873,7 @@ class DBHelper:
         self.requested_books = RequestedBooks(self.db_file)
         self.donated_books = DonateBooks(self.db_file)
         self.books = Books(self.db_file)
+        self.rent = RentBooks(self.db_file)
 
 
     def create_tables(self):
@@ -761,6 +883,7 @@ class DBHelper:
         self.requested_books.setup()
         self.donated_books.setup()
         self.books.setup()
+        self.rent.setup()
         print("Database and tables created successfully!")
 
 
