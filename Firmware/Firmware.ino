@@ -43,7 +43,7 @@ const int MAX_IDS = 10;                                                      // 
 String nationalIds[MAX_IDS];                                                 // تعریف آرایه‌ای برای ذخیره کد ملی‌ها
 int nationalIdCount = 0;                                                     // شمارنده برای تعداد واقعی
 String nationalIdsJson = "";                                                 // برای ذخیره پاسخ get_national_ids
-String defaultIds = "{\"national_ids\": [\"0440386624\", \"0922213372\"]}";  // مقادیر پیشفرض کدملی
+String defaultIds = "{\"national_ids\": [\"0440386624\", \"0960162836\"]}";  // مقادیر پیشفرض کدملی
 
 // آماده سازی کیپد
 const byte ROWS = 4;
@@ -140,7 +140,7 @@ void loop() {
     uid.toUpperCase();
     Serial.println("🔍 Detected UID: " + uid);
 
-    postUIDToServer("0440386624", uid);
+    postUIDToServer("0960162836", uid);
 
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
