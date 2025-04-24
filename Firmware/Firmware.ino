@@ -1,30 +1,39 @@
-#include <WiFi.h>         // کتابخانه اتصال به وایفای
-#include <HTTPClient.h>   // کتابخانه ارسال درخواست اینترنتی
-#include <ArduinoJson.h>  // کتابخانه جداسازی اطلاعات دریافت شده از طریق اینترنت
-#include <Keypad.h>       // کتابخانه کار با کیپد
-#include <SPI.h>          // کتابخانه رابط RFID
-#include <MFRC522.h>      // کتابخانه کار با RFID
+#include <WiFi.h>              // کتابخانه اتصال به وایفای
+#include <HTTPClient.h>        // کتابخانه ارسال درخواست اینترنتی
+#include <ArduinoJson.h>       // کتابخانه جداسازی اطلاعات دریافت شده از طریق اینترنت
+#include <Keypad.h>            // کتابخانه کار با کیپد
+#include <SPI.h>               // کتابخانه رابط RFID
+#include <MFRC522.h>           // کتابخانه کار با RFID
+#include <Wire.h>              // کتابخانه راه اندازی نمایشگر
+#include <Adafruit_GFX.h>      // کتابخانه راه اندازی نمایشگر
+#include <Adafruit_SSD1306.h>  // کتابخانه راه اندازی نمایشگر
+#include "Adafruit_HTU21DF.h"  // کتابخانه راه اندازی سنسور دما
+#include <BH1750.h>            // کتابخانه راه اندازی سنسور نور
 
 
 // لیست اینترنت های مجاز همراه پسورد
 const char* ssidList[] = {
-  "SHAHAB-2.4",
-  "SHAHAB-5",
-  "Saeed144"
+  "Saeed144",
+  "Galaxy A12A312",
+  "SHAHAB-2.4"
 };
 const char* passwordList[] = {
-  "shahab220@",
-  "shahab220@",
-  "1373.144"
+  "1373.144",
+  "jsjh0296",
+  "shahab220@"
 };
 
 const int numNetworks = sizeof(ssidList) / sizeof(ssidList[0]);  // تعداد وایفای ها
 
 // لیست پایه ها
 const int WIFI_LED = 2;
-const int LOCK_PIN = 4;
+const int LOCK_PIN = 15;
 const int RFID_SS = 5;
-const int RFID_RST = 22;
+const int RFID_RST = 4;
+const int TEMP_SENSOR_PIN = 17;
+const int FAN = 16;
+const int LAMP1 = 13;
+const int LAMP2 = 17;
 
 
 const char* webapp = "http://192.168.100.108:5000";  // آدرس سایت
@@ -52,9 +61,19 @@ String input_national_id = "";
 char key;
 const int LOCK_WAIT = 7000;
 
-// راه اندازی RFID
+// آماده سازی RFID
 MFRC522 rfid(RFID_SS, RFID_RST);
 
+// آماده سازی نمایشگر
+Adafruit_SSD1306 display(128, 32, &Wire, -1);
+
+// آماده سازی سنسور دما
+Adafruit_HTU21DF htu = Adafruit_HTU21DF();
+
+// آماده سازی سنسور نور
+BH1750 lightMeter;
+
+unsigned long int cnt = 0;
 
 void setup() {
   // راه اندازی سریال مانیتورینگ
@@ -71,8 +90,33 @@ void setup() {
   digitalWrite(WIFI_LED, LOW);  // خاموش کردن LED در ابتدا
   pinMode(LOCK_PIN, OUTPUT);
   digitalWrite(LOCK_PIN, HIGH);  // قفل بسته
+  pinMode(FAN, OUTPUT);
+  digitalWrite(FAN, HIGH);  // فن خاموش
+  pinMode(LAMP1, OUTPUT);
+  pinMode(LAMP2, OUTPUT);
+  digitalWrite(LAMP1, HIGH);  // لامپ ها روشن
+  digitalWrite(LAMP2, HIGH);  // لامپ ها روشن
   delay(200);
   Serial.println("🟢 PINS are Ready");
+  if (!htu.begin()) {
+    Serial.println("Check circuit. HTU21D not found!");
+    while (1)
+      ;
+  }
+  lightMeter.begin();
+  Serial.println("🟢 Sensors are Ready");
+  // راه اندازی نمایشگر
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    while (true)
+      ;
+  }
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 10);
+  display.println(F("Start"));
+  display.display();
   // اتصال به به اینترنت و دریافت کدملی ها
   bool connected = tryConnectToWiFi();
   if (connected) {
@@ -83,6 +127,7 @@ void setup() {
     digitalWrite(WIFI_LED, LOW);  // LED خاموش
   }
   Serial.println("🟢 System is Ready");
+  display.clearDisplay();
 }
 
 void loop() {
@@ -95,7 +140,7 @@ void loop() {
     uid.toUpperCase();
     Serial.println("🔍 Detected UID: " + uid);
 
-    // postUIDToServer(uid);
+    postUIDToServer("0440386624", uid);
 
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
@@ -108,7 +153,13 @@ void loop() {
     Serial.print(key);
     if (key == '*') {
       Serial.println();
-      // input_national_id.remove(input_national_id.length() - 1); // حذف *
+      // نمایش روی نمایشگر
+      display.clearDisplay();
+      display.setCursor(0, 0);
+      display.println("ID:");
+      display.setCursor(0, 20);
+      display.println(input_national_id);
+      display.display();
       if (isAuthorized(input_national_id)) {
         Serial.printf("✅ Access Granted for %s\n", input_national_id);
         unlockDoor();
@@ -116,9 +167,52 @@ void loop() {
         Serial.printf("❌ Access Denied for %s\n", input_national_id);
       }
       input_national_id = "";  // پاکسازی
+      display.clearDisplay();
     } else {
       input_national_id += key;
+      display.setCursor(0, 0);
+      display.println("ID:");
+      display.setCursor(0, 20);
+      display.println(input_national_id);
+      display.display();
     }
+  }
+
+  if (cnt > 500 || cnt == 0) {
+    Serial.println("GET TEMPERATURE!");
+    manageFan();
+    manageLight();
+    cnt = 1;
+  }
+
+  cnt++;
+  delay(1);
+}
+
+// مدیریت فن با توجه به دما
+void manageFan() {
+  float temp = htu.readTemperature();
+  Serial.print("Temperature(°C): ");
+  Serial.println(temp);
+
+  if (temp > 28.0) {
+    digitalWrite(FAN, LOW);
+  } else {
+    digitalWrite(FAN, HIGH);
+  }
+}
+
+// مدیریت نور
+void manageLight() {
+  float lux = lightMeter.readLightLevel();
+  Serial.print("Light(lux): ");
+  Serial.println(lux);
+  if (lux > 200) {
+    digitalWrite(LAMP1, LOW);
+    digitalWrite(LAMP2, LOW);
+  } else {
+    digitalWrite(LAMP1, HIGH);
+    digitalWrite(LAMP2, HIGH);
   }
 }
 
@@ -214,16 +308,19 @@ void sendGETRequest(const String& endpoint) {
 }
 
 // تابع ارسال آیدی کتاب به اپ
-void postUIDToServer(const String& uid) {
+void postUIDToServer(const String& uid, const String& buid) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    String url = String(webapp) + "/rent_book";
+    String url = String(webapp) + "/add_rent";
     http.begin(url);
     http.addHeader("Content-Type", "application/json");
-    String payload = "{\"uid\": \"" + uid + "\"}";
-    int responseCode = http.POST(payload);
 
-    Serial.printf("📤 POST /rent_book Status: %d\n", responseCode);
+    // ساخت داده شامل uid و buid
+    String payload = "{\"nid\": \"" + uid + "\", \"buid\": \"" + buid + "\"}";
+
+    int responseCode = http.POST(payload);
+    Serial.printf("📤 POST /add_rent Status: %d\n", responseCode);
+
     if (responseCode > 0)
       Serial.println("📄 Response: " + http.getString());
 
