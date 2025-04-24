@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-<title>مشاهده کتاب ها</title>
+<title>مشاهده کتاب های درخواستی</title>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +13,7 @@
                 <div class="col-12">
                     <div class="title-heading text-center">
                         <small class="text-white-50 mb-1 fw-medium text-uppercase mx-auto">آگاهی را گسترش دهید با</small>
-                        <h5 class="heading fw-semibold mb-0 page-heading text-white title-dark">کتاب های اهدا شده</h5>
+                        <h5 class="heading fw-semibold mb-0 page-heading text-white title-dark">کتاب های درخواستی</h5>
                     </div>
                 </div><!--end col-->
             </div><!--end row-->
@@ -22,7 +22,7 @@
                 <nav aria-label="breadcrumb" class="d-block">
                     <ul class="breadcrumb breadcrumb-muted mb-0 p-0">
                         <li class="breadcrumb-item"><a href="{{ url_for('home') }}"> خانه </a></li>
-                        <li aria-current="page" class="breadcrumb-item active">  کتاب های اهدا شده </li>
+                        <li aria-current="page" class="breadcrumb-item active">  کتاب های درخواستی </li>
                     </ul>
                 </nav>
             </div>
@@ -33,7 +33,7 @@
     <div class="col pt-2 picture-item">
         <div class="component-wrapper rounded shadow">
             <div class="p-4 border-bottom text-center">
-                <h4 class="title mb-0">کتاب های موجود</h4>
+                <h4 class="title mb-0">کتاب های درخواست شده</h4>
             </div>
             <div class="table-responsive p-4">
                 <table class="table table-bordered table-striped table-hover text-center align-middle">
@@ -42,20 +42,16 @@
                             <th>نام کتاب</th>
                             <th>نویسنده</th>
                             <th>ناشر</th>
-                            <th>قیمت</th>
-                            <th>ردیف</th>
-                            <th>قفسه</th>
+                            <th>درخواست کننده</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for book in books %}
                         <tr>
-                            <td>{{ book.name }}</td>
+                            <td>{{ book.book_name }}</td>
                             <td>{{ book.author }}</td>
                             <td>{{ book.publisher }}</td>
-                            <td>{{ "{:,.0f}".format(book.price) }} تومان</td>
-                            <td>{{ book.location.split(',')[0] }}</td>
-                            <td>{{ book.location.split(',')[1] }}</td>
+                            <td>{{ book.full_name }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

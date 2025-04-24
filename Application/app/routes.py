@@ -230,12 +230,24 @@ def list_ehda():
             'author': book_info.get('author', ''),
             'publisher': book_info.get('publisher', '')
         })
-    print(result)
+
     return render_template('list_ehda.html', user_info=user_info, books=result)
 
 @app.route('/list-request')
 @login_required
 def list_request():
     user_info = db.users.get_user(current_user.id)
-    books = db.books.get_all_books()
-    return render_template('list_request.html', user_info=user_info, books=books)
+    books = db.requested_books.get_all_requested_books()
+    result = []
+    for book_id, book_info in books.items():
+        donater = db.users.get_user(book_info['user_id'])
+        fname = donater.get('fname', '')
+        lname = donater.get('lname', '')
+        full_name = fname + ' ' + lname
+        result.append({
+            'full_name': full_name,
+            'book_name': book_info.get('name', ''),
+            'author': book_info.get('author', ''),
+            'publisher': book_info.get('publisher', '')
+        })
+    return render_template('list_request.html', user_info=user_info, books=result)
