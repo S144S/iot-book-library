@@ -184,3 +184,58 @@ def get_national_ids():
 def get_reservation():
     availability = db.reservation.get_table_availability_for_now()
     return jsonify({'availability': availability})
+
+@app.route('/books', methods=['GET', 'POST'])
+@login_required
+def books():
+    user_info = db.users.get_user(current_user.id)
+    if request.method == "POST":
+        book_name = request.form["name"]
+        author = request.form["writer"]
+        publisher = request.form["publisher"]
+        price = request.form["price"]
+        uid = request.form["uid"]
+        row = request.form["row"]
+        shelf = request.form["shelf"]
+        if not book_name or not author or not publisher or not row or not uid or not shelf or not price:
+            flash('وارد کردن همه اطلاعات اجباری است!!', 'danger')
+        else:
+            if not price.isdigit() or float(price) < 100:
+                flash('قیمت وارد شده منطقی نیست!', 'warning')
+            else:
+                price = float(price)
+                location = str(row) + ',' + str(shelf)
+                if db.books.add_book(uid, book_name, author, publisher, price, location):
+                    flash('فرم اهدا با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
+                else:
+                    flash('خطا در ثبت اهدا، لطفا دوباره امتحان کنید.', 'danger')
+    books = db.books.get_all_books()
+    return render_template('books.html', user_info=user_info, books=books)
+
+
+@app.route('/list-ehda')
+@login_required
+def list_ehda():
+    user_info = db.users.get_user(current_user.id)
+    books = db.donated_books.get_all_donated_books()
+    result = []
+    for book_id, book_info in books.items():
+        donater = db.users.get_user(book_info['user_id'])
+        fname = donater.get('fname', '')
+        lname = donater.get('lname', '')
+        full_name = fname + ' ' + lname
+        result.append({
+            'full_name': full_name,
+            'book_name': book_info.get('name', ''),
+            'author': book_info.get('author', ''),
+            'publisher': book_info.get('publisher', '')
+        })
+    print(result)
+    return render_template('list_ehda.html', user_info=user_info, books=result)
+
+@app.route('/list-request')
+@login_required
+def list_request():
+    user_info = db.users.get_user(current_user.id)
+    books = db.books.get_all_books()
+    return render_template('list_request.html', user_info=user_info, books=books)

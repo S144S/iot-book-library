@@ -2,6 +2,7 @@ import json
 import sqlite3
 from datetime import datetime
 import jdatetime
+from typing import Dict, List
 
 from flask_login import UserMixin
 
@@ -581,7 +582,6 @@ class DonateBooks:
         except Exception as e:
             print(f"An error occurred to add donated book: {e}")
             return False
-        
 
     def get_all_donated_books(self) -> dict:
         """
@@ -611,6 +611,116 @@ class DonateBooks:
         return donated_books
 
 
+class Books:
+    def __init__(self, db: str) -> None:
+        self.__db = db
+
+    def setup(self) -> None:
+        """
+        Creates the books table in the database.
+        """
+        self.conn = sqlite3.connect(self.__db)
+        cursor = self.conn.cursor()
+        sql = """
+        CREATE TABLE IF NOT EXISTS books (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            UID TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            author TEXT NOT NULL,
+            publisher TEXT NOT NULL,
+            price REAL,
+            location TEXT NOT NULL
+        )
+        """
+        cursor.execute(sql)
+        self.conn.commit()
+        self.conn.close()
+
+    def add_book(self, UID: str, name: str, author: str, publisher: str, price: float, location: str) -> bool:
+        sql = """
+        INSERT INTO books (UID, name, author, publisher, price, location)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            cursor = self.conn.cursor()
+            cursor.execute(sql, (UID, name, author, publisher, price, location))
+            self.conn.commit()
+            self.conn.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def get_all_books(self) -> List[Dict]:
+        sql = "SELECT * FROM books"
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            cursor = self.conn.cursor()
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            books = []
+            column_names = [desc[0] for desc in cursor.description]
+            for row in rows:
+                books.append(dict(zip(column_names, row)))
+            self.conn.close()
+            return books
+        except Exception as e:
+            print(e)
+            return []
+
+    def get_book_by_id(self, book_id: int) -> Dict:
+        return self.__get_book_by_field("id", book_id)
+
+    def get_book_by_uid(self, uid: str) -> Dict:
+        return self.__get_book_by_field("UID", uid)
+
+    def get_book_by_name(self, name: str) -> Dict:
+        return self.__get_book_by_field("name", name)
+
+    def get_book_by_author(self, author: str) -> Dict:
+        return self.__get_book_by_field("author", author)
+
+    def get_book_by_publisher(self, publisher: str) -> Dict:
+        return self.__get_book_by_field("publisher", publisher)
+
+    def get_all_books_by_author(self, author: str) -> List[Dict]:
+        return self.__get_all_books_by_field("author", author)
+
+    def get_all_books_by_publisher(self, publisher: str) -> List[Dict]:
+        return self.__get_all_books_by_field("publisher", publisher)
+
+    def __get_book_by_field(self, field: str, value) -> Dict:
+        sql = f"SELECT * FROM books WHERE {field} = ? LIMIT 1"
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            cursor = self.conn.cursor()
+            cursor.execute(sql, (value,))
+            row = cursor.fetchone()
+            self.conn.close()
+            if row:
+                column_names = [desc[0] for desc in cursor.description]
+                return dict(zip(column_names, row))
+            return {}
+        except Exception as e:
+            print(e)
+            return {}
+
+    def __get_all_books_by_field(self, field: str, value) -> List[Dict]:
+        sql = f"SELECT * FROM books WHERE {field} = ?"
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            cursor = self.conn.cursor()
+            cursor.execute(sql, (value,))
+            rows = cursor.fetchall()
+            column_names = [desc[0] for desc in cursor.description]
+            self.conn.close()
+            return [dict(zip(column_names, row)) for row in rows]
+        except Exception as e:
+            print(e)
+            return []
+
+
 class DBHelper:
     def __init__(self, db_file: str = "database.db") -> None:
         """
@@ -626,6 +736,7 @@ class DBHelper:
         self.reservation = TableReservation(self.db_file)
         self.requested_books = RequestedBooks(self.db_file)
         self.donated_books = DonateBooks(self.db_file)
+        self.books = Books(self.db_file)
 
 
     def create_tables(self):
@@ -634,6 +745,7 @@ class DBHelper:
         self.reservation.setup()
         self.requested_books.setup()
         self.donated_books.setup()
+        self.books.setup()
         print("Database and tables created successfully!")
 
 
