@@ -318,3 +318,20 @@ def get_reservation():
     availability = db.reservation.get_table_availability_for_now()
     return jsonify({'availability': availability})
 
+
+@app.route('/add_rent', methods=['POST'])
+def add_rent():
+    data = request.get_json()
+    nid = data.get('nid')
+    buid = data.get('buid')
+    print(nid, buid)
+    if not nid or not buid:
+        return jsonify({'error': 'nid and buid are required'}), 400
+    
+    user_id = db.subscribed_users.get_user_id_by_national_id(nid)
+    book_id = db.books.get_book_by_uid(buid).get('id')
+    done = db.rent.add_rent(user_id, book_id)
+    if done:
+        return jsonify({'stat': True}), 200
+    else:
+        return jsonify({'stat': False, 'error': 'Failed to add rent'}), 400

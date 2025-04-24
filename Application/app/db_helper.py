@@ -361,6 +361,23 @@ class SubscribedUsers:
             print(f"Error retrieving subscriber by user_id: {e}")
             return {}
 
+    def get_user_id_by_national_id(self, national_id: str) -> int:
+        """
+        Retrieves the user ID associated with a given national ID.
+
+        :param national_id: National ID of the subscriber
+        :return: User ID if found, otherwise -1
+        """
+        try:
+            with sqlite3.connect(self.__db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT user_id FROM Subscribed_users WHERE national_id = ?", (national_id,))
+                row = cursor.fetchone()
+                return row[0] if row else -1
+        except Exception as e:
+            print(f"Error retrieving user ID by national_id: {e}")
+            return -1
+
 class TableReservation:
     def __init__(self, db: str) -> None:
         self.__db = db
