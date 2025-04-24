@@ -86,6 +86,7 @@ void setup() {
 }
 
 void loop() {
+  // 🟢 اسکن کارت RFID
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
     String uid = "";
     for (byte i = 0; i < rfid.uid.size; i++) {
@@ -98,27 +99,27 @@ void loop() {
 
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
-    delay(1000);  // برای جلوگیری از ارسال چندباره
+    delay(1000);
   }
 
-  while (key != '*') {  // فشردن کلید * برای تایید
-    key = keypad.getKey();
-    if (key) {
-      Serial.print(key);
+  // 🟢 گرفتن ورودی از کیپد به صورت
+  char key = keypad.getKey();
+  if (key) {
+    Serial.print(key);
+    if (key == '*') {
+      Serial.println();
+      // input_national_id.remove(input_national_id.length() - 1); // حذف *
+      if (isAuthorized(input_national_id)) {
+        Serial.printf("✅ Access Granted for %s\n", input_national_id);
+        unlockDoor();
+      } else {
+        Serial.printf("❌ Access Denied for %s\n", input_national_id);
+      }
+      input_national_id = "";  // پاکسازی
+    } else {
       input_national_id += key;
     }
   }
-  Serial.println();
-  // پاک کردن * آخر
-  input_national_id.remove(input_national_id.length() - 1);
-  if (isAuthorized(input_national_id)) {
-    Serial.printf("✅ Access Granted for %s\n", input_national_id);
-    unlockDoor();
-  } else {
-    Serial.printf("❌ Access Denied for %s\n", input_national_id);
-  }
-  key = '#';
-  input_national_id = "";
 }
 
 // تابع اتصال به یکی از SSIDها
