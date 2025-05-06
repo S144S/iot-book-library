@@ -75,6 +75,12 @@ def contact():
     user_info = db.users.get_user(current_user.id)
     return render_template('contact.html', user_info=user_info)
 
+@app.route('/about')
+@login_required
+def about():
+    user_info = db.users.get_user(current_user.id)
+    return render_template('about.html', user_info=user_info)
+
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
@@ -146,7 +152,6 @@ def request_book():
                 flash('خطا در ثبت درخواست، لطفا دوباره امتحان کنید.', 'danger')
     return render_template('book_req.html', user_info=user_info)
 
-
 @app.route('/reserve', methods=['GET', 'POST'])
 @login_required
 def reserve():
@@ -211,7 +216,6 @@ def books():
                     flash('خطا در ثبت اهدا، لطفا دوباره امتحان کنید.', 'danger')
     books = db.books.get_all_books()
     return render_template('books.html', user_info=user_info, books=books)
-
 
 @app.route('/list-ehda')
 @login_required
