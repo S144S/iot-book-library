@@ -112,7 +112,20 @@ def ehda():
                 flash('فرم اهدا با موفقیت ثبت شد، بزودی با شما تماس گرفته می‌شود.', 'success')
             else:
                 flash('خطا در ثبت اهدا، لطفا دوباره امتحان کنید.', 'danger')
-    return render_template('ehda.html', user_info=user_info)
+    books = db.requested_books.get_all_requested_books()
+    result = []
+    for book_id, book_info in books.items():
+        donater = db.users.get_user(book_info['user_id'])
+        fname = donater.get('fname', '')
+        lname = donater.get('lname', '')
+        full_name = fname + ' ' + lname
+        result.append({
+            'full_name': full_name,
+            'book_name': book_info.get('name', ''),
+            'author': book_info.get('author', ''),
+            'publisher': book_info.get('publisher', '')
+        })
+    return render_template('ehda.html', user_info=user_info, requested_books=result)
 
 @app.route('/request-book', methods=['GET', 'POST'])
 @login_required

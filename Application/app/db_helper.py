@@ -378,6 +378,7 @@ class SubscribedUsers:
             print(f"Error retrieving user ID by national_id: {e}")
             return -1
 
+
 class TableReservation:
     def __init__(self, db: str) -> None:
         self.__db = db

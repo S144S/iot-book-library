@@ -30,7 +30,36 @@
     </section><!--end section-->
     <!-- Hero End -->
 
-        <!-- Forms Start -->
+    <div class="col pt-2 picture-item mb-2">
+        <div class="component-wrapper rounded shadow">
+            <div class="p-4 border-bottom text-center">
+                <h4 class="title mb-0">لیست کتاب های اولویت اهدا</h4>
+            </div>
+            <div class="table-responsive p-4">
+                <table class="table table-bordered table-striped table-hover text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>نام کتاب</th>
+                            <th>نویسنده</th>
+                            <th>ناشر</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in requested_books %}
+                        <tr>
+                            <td>{{ book.book_name }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.publisher }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <span class="p-3">شما می توانید کتاب هایی غیر از لیست فوق نیز اهدا کنید اما کتاب های لیست بالا از اولویت برخوردارند.</span>
+    </div>
+
+    <!-- Forms Start -->
     <div class="col pt-2 picture-item">
         <div class="component-wrapper rounded shadow">
             <div class="p-4 border-bottom text-center">
