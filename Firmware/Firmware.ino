@@ -34,6 +34,7 @@ const int TEMP_SENSOR_PIN = 17;
 const int FAN = 16;
 const int LAMP1 = 13;
 const int LAMP2 = 17;
+const int TABLE_LED = 3
 
 
 const char* webapp = "http://192.168.100.108:5000";  // آدرس سایت
@@ -96,6 +97,8 @@ void setup() {
   pinMode(LAMP2, OUTPUT);
   digitalWrite(LAMP1, HIGH);  // لامپ ها روشن
   digitalWrite(LAMP2, HIGH);  // لامپ ها روشن
+  pinMode(TABLE_LED, OUTPUT);
+  digitalWrite(TABLE_LED, LOW); // لامپ میز خاموش
   delay(200);
   Serial.println("🟢 PINS are Ready");
   if (!htu.begin()) {
@@ -162,8 +165,16 @@ void loop() {
       display.display();
       if (isAuthorized(input_national_id)) {
         Serial.printf("✅ Access Granted for %s\n", input_national_id);
+	    display.clearDisplay();
+	    display.setCursor(0, 0);
+	    display.println("Welcome!");
+		display.display();
         unlockDoor();
       } else {
+	    display.clearDisplay();
+	    display.setCursor(0, 0);
+	    display.println("XXX Not Registerd XXX");
+		display.display();
         Serial.printf("❌ Access Denied for %s\n", input_national_id);
       }
       input_national_id = "";  // پاکسازی
@@ -178,12 +189,18 @@ void loop() {
     }
   }
 
-  if (cnt > 500 || cnt == 0) {
-    Serial.println("GET TEMPERATURE!");
+  if ((cnt % 500 == 0)) {
+    Serial.println("GET LIGHT & TEMPERATURE!");
     manageFan();
     manageLight();
-    cnt = 1;
   }
+  
+  
+  if ((cnt % 1000 == 0)) {
+    Serial.println("Check table reservation!");
+    check_table();
+  }
+  
 
   cnt++;
   delay(1);
@@ -374,4 +391,64 @@ void unlockDoor() {
   delay(LOCK_WAIT);
   digitalWrite(LOCK_PIN, HIGH);
   Serial.println("🔒 Lock CLOSED");
+}
+
+// چک کردن رزرو بودن میز
+void check_table() {
+  String endpoint = "/get_reservation";
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = String(webapp) + endpoint;
+
+    const int maxRetries = 2;
+    int attempt = 0;
+    int responseCode = -1;
+    String payload = "";
+
+    while (attempt < maxRetries) {
+      Serial.printf("🔗 Attempt %d: Requesting %s\n", attempt + 1, url.c_str());
+
+      http.begin(url);
+      responseCode = http.GET();
+
+      if (responseCode == 200) {
+        payload = http.getString();
+        Serial.println("📄 Response:");
+        Serial.println(payload);
+
+        // پارس کردن JSON
+        const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(4) + 60;
+        DynamicJsonDocument doc(capacity);
+
+        DeserializationError error = deserializeJson(doc, payload);
+        if (error) {
+          Serial.print("⚠️ JSON Parse Error: ");
+          Serial.println(error.c_str());
+        } else {
+          bool table1Status = doc["availability"]["table1"];
+          if (table1Status) {
+            digitalWrite(TABLE_LED, HIGH);
+            Serial.println("✅ Table1 is available → LED ON");
+          } else {
+            digitalWrite(TABLE_LED, LOW);
+            Serial.println("❌ Table1 is NOT available → LED OFF");
+          }
+        }
+
+        break;  // موفق شد
+      } else {
+        Serial.printf("⚠️ Request failed with status: %d\n", responseCode);
+		digitalWrite(TABLE_LED, LOW);
+        http.end();
+        delay(1000);
+      }
+
+      attempt++;
+    }
+
+    http.end();
+  } else {
+	digitalWrite(TABLE_LED, LOW);
+    Serial.println("🚫 Internet Problem!.");
+  }
 }
