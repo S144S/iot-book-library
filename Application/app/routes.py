@@ -81,7 +81,6 @@ def subscribe():
     user_info = db.users.get_user(current_user.id)
     if request.method == "POST":
         national_id = str(request.form["national_id"])
-        # TODO: Add donated book into the database
         if not national_id:
             flash('افزودن کد ملی الزامی است!!', 'danger')
         elif len(national_id) != 10:
@@ -91,7 +90,7 @@ def subscribe():
             if done:
                 flash('عضویت شما با موفقیت انجام شد.', 'success')
             else:
-                flash('خطا در عضویت، لطفا دوباره امتحان کنید.', 'danger')
+                flash('شما قبلا عضو کتابخانه شده اید!', 'danger')
 
     return render_template('subscribe.html', user_info=user_info)
 
