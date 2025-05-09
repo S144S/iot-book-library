@@ -328,8 +328,10 @@ def get_national_ids():
 
 @app.route('/get_reservation', methods=['GET'])
 def get_reservation():
+    today = jdatetime.datetime.now().togregorian().date()
+    hour = datetime.datetime.now().hour
     availability = db.reservation.get_table_availability_for_now()
-    return jsonify({'availability': availability})
+    return jsonify({'today': today, 'hour': hour, 'availability': availability})
 
 
 @app.route('/add_rent', methods=['POST'])

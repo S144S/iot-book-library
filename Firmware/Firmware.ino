@@ -34,10 +34,10 @@ const int TEMP_SENSOR_PIN = 17;
 const int FAN = 16;
 const int LAMP1 = 13;
 const int LAMP2 = 17;
-const int TABLE_LED = 3
+const int TABLE_LED = 3;
 
 
-const char* webapp = "http://192.168.100.108:5000";  // آدرس سایت
+const char* webapp = "https://farzanlib.pythonanywhere.com";  // آدرس سایت
 
 
 const int MAX_IDS = 10;                                                      // حداکثر تعداد قابل‌پشتیبانی کد ملی
@@ -103,16 +103,14 @@ void setup() {
   Serial.println("🟢 PINS are Ready");
   if (!htu.begin()) {
     Serial.println("Check circuit. HTU21D not found!");
-    while (1)
-      ;
+    // while (1);
   }
   lightMeter.begin();
   Serial.println("🟢 Sensors are Ready");
   // راه اندازی نمایشگر
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println(F("SSD1306 allocation failed"));
-    while (true)
-      ;
+    // while (true);
   }
   display.clearDisplay();
   display.setTextSize(1);

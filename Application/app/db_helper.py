@@ -481,7 +481,6 @@ class TableReservation:
         # Get today's Gregorian date
         today = jdatetime.datetime.now().togregorian().date()
         hour = datetime.now().hour
-
         # Initialize the availability dictionary for each table
         availability = {
             'table1': False,
@@ -894,8 +893,6 @@ class RentBooks:
                 return False
 
             user_id = result[0]
-            print('----------------->', user_id)
-
             # Delete rent records for the user
             cursor.execute("DELETE FROM rent_books WHERE user_id = ?", (user_id,))
             self.conn.commit()
