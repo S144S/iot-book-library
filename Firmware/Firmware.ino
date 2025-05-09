@@ -13,14 +13,14 @@
 
 // لیست اینترنت های مجاز همراه پسورد
 const char* ssidList[] = {
-  "Saeed144",
   "Galaxy A12A312",
-  "SHAHAB-2.4"
+  "MobinNet-816E",
+  "Saeed144"
 };
 const char* passwordList[] = {
-  "1373.144",
   "jsjh0296",
-  "shahab220@"
+  "farzan@123",
+  "1373.144"
 };
 
 const int numNetworks = sizeof(ssidList) / sizeof(ssidList[0]);  // تعداد وایفای ها
