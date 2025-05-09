@@ -481,6 +481,7 @@ class TableReservation:
         # Get today's Gregorian date
         today = jdatetime.datetime.now().togregorian().date()
         hour = datetime.now() + timedelta(hours=3.5)
+        hour = hour.hour
         print(hour)
         # Initialize the availability dictionary for each table
         availability = {
