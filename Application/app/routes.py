@@ -2,7 +2,6 @@ from flask import flash, redirect, render_template, request, url_for, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 import jdatetime
 import datetime
-from zoneinfo import ZoneInfo
 
 from app import UserManagement, app, bcrypt, db, login_manager
 
@@ -330,7 +329,7 @@ def get_national_ids():
 @app.route('/get_reservation', methods=['GET'])
 def get_reservation():
     today = jdatetime.datetime.now().togregorian().date()
-    hour = datetime.datetime.now(ZoneInfo("Asia/Tehran")).hour
+    hour = datetime.datetime.now() + datetime.timedelta(hours=3.5)
     availability = db.reservation.get_table_availability_for_now()
     return jsonify({'today': today, 'hour': hour, 'availability': availability})
 

@@ -3,7 +3,6 @@ import sqlite3
 from datetime import datetime, timedelta
 import jdatetime
 from typing import Dict, List
-from zoneinfo import ZoneInfo
 
 from flask_login import UserMixin
 
@@ -481,7 +480,8 @@ class TableReservation:
         """
         # Get today's Gregorian date
         today = jdatetime.datetime.now().togregorian().date()
-        hour = datetime.now(ZoneInfo("Asia/Tehran")).hour
+        hour = datetime.now() + timedelta(hours=3.5)
+        print(hour)
         # Initialize the availability dictionary for each table
         availability = {
             'table1': False,
