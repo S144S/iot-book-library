@@ -36,6 +36,15 @@
                 <h4 class="title mb-0">لیست امانات</h4>
             </div>
             <div class="table-responsive p-4">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 <table class="table table-bordered table-striped table-hover text-center align-middle">
                     <thead class="table-dark">
                         <tr>
@@ -58,7 +67,12 @@
                                 <td>{{ item.phone }}</td>
                                 <td>{{ item.book_name }}</td>
                                 <td>{{ item.due_date }}</td>
-                                <td><button class="btn-small btn-danger">تحویل شد</button></td>
+                                <td>
+                                    <form action="/del-rent" method="post" style="display:inline;">
+                                        <input type="hidden" name="national_id" value="{{ item.national_id }}">
+                                        <button type="submit" class="btn-small btn-success">تحویل شد</button>
+                                    </form>
+                                </td>
                             </tr>
                             {% endif %}
                         {% endfor %}

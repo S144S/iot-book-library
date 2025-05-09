@@ -874,6 +874,38 @@ class RentBooks:
             print(e)
             return []
 
+    def delete_rents_by_national_id(self, national_id: str) -> bool:
+        """
+        Deletes rent records for a user identified by national_id.
+
+        :param national_id: National ID of the user
+        :return: Boolean status of the operation
+        """
+        try:
+            self.conn = sqlite3.connect(self.__db)
+            cursor = self.conn.cursor()
+
+            # Get user_id from national_id
+            cursor.execute("SELECT user_id FROM Subscribed_users WHERE national_id = ?", (national_id,))
+            result = cursor.fetchone()
+            if not result:
+                print("No user found with this national_id.")
+                self.conn.close()
+                return False
+
+            user_id = result[0]
+            print('----------------->', user_id)
+
+            # Delete rent records for the user
+            cursor.execute("DELETE FROM rent_books WHERE user_id = ?", (user_id,))
+            self.conn.commit()
+            self.conn.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+
 
 class DBHelper:
     def __init__(self, db_file: str = "database.db") -> None:

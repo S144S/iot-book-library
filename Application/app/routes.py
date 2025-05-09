@@ -182,7 +182,6 @@ def check_table():
     time = data.get('time', '00:00 - 00:00')
     start_hour = int(time.split(" - ")[0].split(":")[0])
     tabels = db.reservation.get_table_status(date, start_hour)
-    print(tabels)
     return jsonify({
         'table1': tabels.get('table1', False),
         'table2': tabels.get('table2', False),
@@ -279,7 +278,6 @@ def members():
 def rent():
     user_info = db.users.get_user(current_user.id)
     rents = db.rent.get_all_rents()
-    print(rents)
     result = []
     for rent in rents:
         info = {}
@@ -298,7 +296,6 @@ def rent():
             info['due_date'] = f"{jalali_date.year}/{jalali_date.month:02}/{jalali_date.day:02}"
             info['is_return'] = rent.get('is_return', False)
             result.append(info)
-    print(result)
     return render_template('rent_list.html', user_info=user_info, items=result)
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -351,3 +348,13 @@ def add_rent():
         return jsonify({'stat': True}), 200
     else:
         return jsonify({'stat': False, 'error': 'Failed to add rent'}), 400
+
+@app.route("/del-rent", methods=["POST"])
+def del_rent():
+    national_id = request.form.get("national_id")
+    done = db.rent.delete_rents_by_national_id(str(national_id))
+    if done:
+        flash('تغییرات با موفقیت انجام شد', 'success')
+    else:
+        flash('خطایی در سمت سرور رخ داده است! بعدا تلاش کنید!', 'danger')
+    return redirect("/rent")
